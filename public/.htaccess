@@ -1,0 +1,46 @@
+AddDefaultCharset UTF-8
+
+#Options -Indexes
+#RequestHeader unset Range
+#RequestHeader unset Request-Range
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+#RewriteCond %{HTTP_HOST} kachay-zhelezo.com
+#RewriteRule ^(.*)$ http://kachay-zhelezo.net/$1 [R=301,L]
+
+#RewriteCond %{HTTP_HOST} ^www.kachay-zhelezo.com
+#RewriteRule ^(.*)$ http://kachay-zhelezo.com/$1 [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ / [R=301,L]
+
+RewriteCond %{QUERY_STRING} (item=[0-9]*)&(gallery=[0-9]*)&(set=[0-9]*)
+RewriteRule ^(.*)$ /?%3&%2&%1 [R=301,L]
+
+RewriteCond %{QUERY_STRING} (gallery=[0-9]*)&(item=[0-9]*)&(set=[0-9]*)
+RewriteRule ^(.*)$ /?%3&%1&%2 [R=301,L]
+
+
+RewriteCond %{QUERY_STRING} (gallery=[0-9]*)&(set=[0-9]*)&(item=[0-9]*)
+RewriteRule ^(.*)$ /?%2&%1&%3 [R=301,L]
+
+RewriteCond %{QUERY_STRING} (item=[0-9]*)&(set=[0-9]*)&(gallery=[0-9]*)
+RewriteRule ^(.*)$ /?%2&%3&%1 [R=301,L]
+
+RewriteCond %{QUERY_STRING} (set=[0-9]*)&(item=[0-9]*)&(gallery=[0-9]*)
+RewriteRule ^(.*)$ /?%1&%3&%2 [R=301,L]
+
+RewriteCond %{QUERY_STRING} (gallery=[0-9]*)&(set=[0-9]*)
+RewriteRule ^(.*)$ /?%2&%1 [R=301,L]
+
+</IfModule>
+
+AddHandler application/x-httpd-php .inc
+Options All
