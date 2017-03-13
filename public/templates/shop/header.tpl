@@ -6,7 +6,7 @@
 <meta name="description" content="{$header_data.description}" />
 <meta name="keywords" content="{$header_data.keywords}" />
 <title>{$header_data.title}</title>
-<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.5.1" />
+<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.5.2" />
 <!--[if IE 6]> <link href="{$theme_path}/style_ie6.css" rel="stylesheet" type="text/css"> <![endif]-->
 <link rel="stylesheet" type="text/css" href="{$theme_path}/highslide.css" />
 <link rel="stylesheet" type="text/css" media="print" href="{$theme_path}/print.css" />
@@ -58,7 +58,7 @@ $.getScript('/js/site/common.js');
         </div>
         <div class="boxed header-titles">
             <div class="site-title boxed">Kachay-Zhelezo.net</div>
-            <h2 class="site-title-2 boxed">магазин спортивной фармакологии</h2>
+            <h2 class="site-title-2 boxed">ИНТЕРНЕТ-МАГАЗИН СТЕРОИДОВ</h2>
         </div>
         <div class="right_top_block">
             
