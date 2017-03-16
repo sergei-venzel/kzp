@@ -157,38 +157,41 @@ if ($act_item > 0) {
 
 }
 elseif($proc_cat>=0) {
-    
-    
-    if(isset($_GET['page']))
-    	$page_show = (int)$_GET['page'];
-    else
-    	$page_show = 1;
-    
-    $items_list = $gallery->list_cat_items($proc_cat,$basket_active,(($page_show-1)*catalog_portion));
-    //logger($items_list['products']);
-    $tpl->assign('gallery_page_name',$gallery_page_name);
-    //$tpl->assign('list_gallery',$blocks_gallery);
-    $tpl->assign('thumbs','/'.$gallery->photo_dir_pref.$proc_cat.$gallery->thumb_dir.'/');
-    $tpl->assign('big','/'.$gallery->photo_dir_pref.$proc_cat.'/');
-    $tpl->assign('root_category',$gallery->get_root_category($proc_cat));
-    $tpl->assign('items_list',$items_list['products']);
-    $pagination = FALSE;
-    if((int)catalog_portion > 0) {
-    
-    	$pagination = array();
-    	$page_cnt = ceil($items_list['cnt']/catalog_portion);
-    	for($i=1; $i<=$page_cnt;$i++)
-    		$pagination[] = $i;
-	}
-    
-    $tpl->assign('page_show',$page_show);
-    $tpl->assign('display_main_picture',$display_main_picture);
-    $tpl->assign('pagination',$pagination);
+
+
+    if (isset($_GET['page'])) {
+        $page_show = (int) $_GET['page'];
+    }
+    else {
+        $page_show = 1;
+    }
+
+    $items_list = $gallery->list_cat_items($proc_cat, $basket_active, (($page_show - 1) * catalog_portion));
+
+    $tpl->assign('gallery_page_name', $gallery_page_name);
+
+    $tpl->assign('thumbs', '/' . $gallery->photo_dir_pref . $proc_cat . $gallery->thumb_dir . '/');
+    $tpl->assign('big', '/' . $gallery->photo_dir_pref . $proc_cat . '/');
+    $tpl->assign('root_category', $gallery->get_root_category($proc_cat));
+    $tpl->assign('items_list', $items_list['products']);
+    $pagination = false;
+    if ((int) catalog_portion > 0) {
+
+        $pagination = array();
+        $page_cnt   = ceil($items_list['cnt'] / catalog_portion);
+        for ($i = 1; $i <= $page_cnt; $i ++) {
+            $pagination[] = $i;
+        }
+    }
+
+    $tpl->assign('page_show', $page_show);
+    $tpl->assign('display_main_picture', $display_main_picture);
+    $tpl->assign('pagination', $pagination);
     $cat_nav = array();
-	$gallery->get_site_navigation($cat_nav,array(),0,0,$page_info);
-	
-	$tpl->assign('catalog_menu',$cat_nav);
-    
+    $gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
+
+    $tpl->assign('catalog_menu', $cat_nav);
+
     $page_html .= $tpl->fetch('catalog_category.tpl');
     
 }

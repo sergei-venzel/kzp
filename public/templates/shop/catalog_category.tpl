@@ -115,7 +115,7 @@
 						{foreach from=$items_list item=item}
 						<div class="card">
 							<div class="card-title">
-								<p><a href="/?set={$smarty.get.set}&gallery={$item->cat_id}&item={$item->id}" title="подробнее...">{$item->item_name}</a></p>
+								<p><a href="{$item->link}" title="подробнее...">{$item->item_name}</a></p>
 							</div>
 							
 							<div class="preview">{if $item->photo}
@@ -123,7 +123,7 @@
 									<div class="highslide-caption">{$item->item_name}</div>{/if}</div>
 							
 							<div class="spec">
-								<div class="details"><a rel="nofollow" href="/?set={$smarty.get.set}&gallery={$item->cat_id}&item={$item->id}" title="подробнее...">{$item->short}</a></div>
+								<div class="details"><a rel="nofollow" href="{$item->link}" title="подробнее...">{$item->short}</a></div>
 								<div class="cost">
 									{if $item->price != 0}
 									Цена:
