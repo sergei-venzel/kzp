@@ -606,6 +606,8 @@ div.spec {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     padding: 2px 5px;
+    position: relative;
+    z-index: 10;
 }
 
 div.preview:empty + div.spec {
@@ -614,8 +616,8 @@ div.preview:empty + div.spec {
 
 .spec div.details {
 	font-size: 11px;
-	height:92px;
-	margin-bottom: 7px;
+	height:130px;
+	margin-bottom: 3px;
 	overflow: hidden;
 }
 
@@ -631,16 +633,22 @@ div.preview:empty + div.spec {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    width: 60px;
-    float: right;
-    position: relative;
-    top: -14px;
+    width: 90px;
+    /*float: right;*/
+    /*position: relative;*/
+    bottom: 3px;
+    right: 2px;
     color: #E93388;
     font-size: 16px;
     line-height: 12px;
     box-shadow: 1px 1px 3px 0 #444;
     -moz-box-shadow: 1px 1px 3px 0 #444;
     -webkit-box-shadow: 1px 1px 3px 0 rgba(71, 85, 71, 0.8);
+    position:absolute;
+    z-index: 4;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 .spec div.inbasket:before {
