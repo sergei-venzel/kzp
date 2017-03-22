@@ -526,7 +526,14 @@ class gallery {
 
                     foreach ($items as $k => $i) {
 
-                        $items[$k]->link = $val->link . '&item=' . $i->id;
+                        $externalProductLink = trim($items[$k]->c_links);
+                        $link     = 'set=' . $this->gallery_page_id . '&gallery=' . $cat_id;
+                        if(!empty($externalProductLink)) {
+                            $items[$k]->link = '/?set=' . $this->gallery_page_id . '&' . $externalProductLink;
+                        }
+                        else {
+                            $items[$k]->link = $val->link . '&item=' . $i->id;
+                        }
                     }
                     $val->items = $items;
                 }
@@ -743,17 +750,19 @@ class gallery {
             return $e->getMessage();
         }
     }
-    
-    function get_category_commodity($cat_id=0) {
-        
+
+    public function get_category_commodity($cat_id = 0)
+    {
         global $db;
-        
-        $list = $db->select_obj($this->photo_table,'id,cat_id,item_name,photo,new_item','cat_id=\''.(int)$cat_id.'\' and publish=1 order by sort_order','file: '.__FILE__.'line:'.__LINE__);
-        
-        if($list)
+
+        $list = $db->select_obj($this->photo_table, 'id,cat_id,item_name,c_links,photo,new_item', 'cat_id=\'' . (int) $cat_id . '\' and publish=1 order by sort_order', 'file: ' . __FILE__ . 'line:' . __LINE__);
+
+        if ($list) {
             return $list;
-        else
+        }
+        else {
             return false;
+        }
     }
     
     
