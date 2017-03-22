@@ -54,7 +54,7 @@ $.getScript('/js/site/common.js');
     <div class="top_block">
         
         <div class="left_top_block">
-            <a rel="nofollow" href="/" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине"><img src="{$theme_path}/images/logo.gif" alt="logo" title="{$smarty.server.HTTP_HOST}" /></a>
+            <a rel="nofollow" href="/" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине"><img src="{$theme_path}/images/logo.gif" alt="logo" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине" /></a>
         </div>
         <div class="boxed header-titles">
             <div class="site-title boxed">Kachay-Zhelezo.net</div>
