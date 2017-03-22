@@ -1057,9 +1057,15 @@ class gallery {
     	return $root_category;
 	}
 
+	public function categoryExists($catId)
+	{
+        global $db;
+        $query = 'SELECT 1 FROM `'. $this->tree_table .'` WHERE `id`=\''. (int)$catId .'\' AND `publish`=1 LIMIT 1';
+        return $db->selectAssoc($query);
+	}
+
     function list_cat_items($cat_id, $if_basket, $from = 0)
     {
-
         global $db;
 
         $from = (int) $from;

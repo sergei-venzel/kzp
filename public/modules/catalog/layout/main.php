@@ -6,96 +6,99 @@ else $proc_cat=0;
 
 $display_main_picture = $proc_cat==0 ? TRUE : FALSE;
 
-if(isset($_GET['item'])) $act_item = (int)$_GET['item'];
-else $act_item=0;
+if (isset($_GET['item'])) {
+    $act_item = (int) $_GET['item'];
+}
+else {
+    $act_item = 0;
+}
 
 require_once('catalog/class.catalog.php');
 $gallery = new gallery();
 
-if(isset($_GET['add_to_basket']) AND isset($_SESSION['basket']['is_active'])/* AND $basket_active !== FALSE*/)
-{
-	$response = '';
-	$response->err = '';
-	
-	
-	
-	if(!isset($_SESSION['basket']['order'][(int)$_GET['add_to_basket']]))
-		$_SESSION['basket']['order'][(int)$_GET['add_to_basket']] = 1;
-	
-	
-	//write_log(__LINE__,'cat_menu.txt');
-	$result = $gallery->count_basket_items($_SESSION['basket']['order']);
-	if($result !== FALSE)
-	{
-		$basket_sum = 0;
-		foreach($result as $item)
-		{
-			$basket_sum += $item->{'sum_'.$item->id};
-		}
-        if($gallery->cur_factor > 0) {
+if (isset($_GET['add_to_basket']) AND isset($_SESSION['basket']['is_active'])) {
+    $response      = new stdClass();
+    $response->err = '';
+
+
+    if ( ! isset($_SESSION['basket']['order'][(int) $_GET['add_to_basket']])) {
+        $_SESSION['basket']['order'][(int) $_GET['add_to_basket']] = 1;
+    }
+
+
+    //write_log(__LINE__,'cat_menu.txt');
+    $result = $gallery->count_basket_items($_SESSION['basket']['order']);
+    if ($result !== false) {
+        $basket_sum = 0;
+        foreach ($result as $item) {
+            $basket_sum += $item->{'sum_' . $item->id};
+        }
+        if ($gallery->cur_factor > 0) {
             $basket_sum = $basket_sum * $gallery->cur_factor;
         }
-		$_SESSION['basket']['total'] = $basket_sum;
-		$response->total = number_format(floatval($basket_sum),1,'.',' ');
-		$response->items = count($result);
-	}
-	else
-		$response->err = 1;
-	//write_log(__LINE__,'cat_menu.txt');
-	//sleep(30);
-	echo json_encode($response);
-	exit;
+        $_SESSION['basket']['total'] = $basket_sum;
+        $response->total             = number_format(floatval($basket_sum), 1, '.', ' ');
+        $response->items             = count($result);
+    }
+    else {
+        $response->err = 1;
+    }
+    //write_log(__LINE__,'cat_menu.txt');
+    //sleep(30);
+    echo json_encode($response);
+    exit;
 }
 
-$gallery_page_name='';
+$gallery_page_name = '';
 
-$showcase_items = FALSE;
-$tpl->assign('catalog_page',$act_page_id);
-if($proc_cat>=0 ) {
-    
-    if ($proc_cat>0) {
-        $cat_res = $db->get_extreme_value($gallery->tree_table,'id,rid,cat_text,p_name,p_title,p_keywords,p_description,thumb,no_photos,p_bg','publish=1 and id=\''.$proc_cat.'\'','file: '.__FILE__.'line:'.__LINE__);
-        
-            
-        if($cat_res) {
+$showcase_items = false;
+$tpl->assign('catalog_page', $act_page_id);
+if ($proc_cat >= 0) {
+
+    if ($proc_cat > 0) {
+
+        $cat_res = $db->get_extreme_value($gallery->tree_table, 'id,rid,cat_text,p_name,p_title,p_keywords,p_description,thumb,no_photos,p_bg', 'publish=1 and id=\'' . $proc_cat . '\'', 'file: ' . __FILE__ . 'line:' . __LINE__);
+
+        if ($cat_res) {
             $title             = $cat_res->p_title;
             $description       = $cat_res->p_description;
             $keywords          = $cat_res->p_keywords;
             $gallery_page_name = $cat_res->p_name;
             $tpl->assign('category_content', $cat_res->cat_text);
         }
-        
-        if($title == '') {
+        else {
+            include(PUBPATH . '404.php');
+            exit();
+        }
+
+        if (empty($title)) {
             $title = $cat_res->p_name;
         }
     }
-    
-    if($proc_cat==0 ) {
-        $content_res = $db->get_extreme_value($page->table,'content','id=\''.$act_page_id.'\'');
-        $tpl->assign('page_content',$content_res->content);
-        
-        if($showcase = $gallery->showcase_items())
-        {
-        	$elements = 3;
-        	$showcase_items = array_chunk($showcase,$elements);
-        	//
-        	foreach($showcase_items as $key=>$val)
-        	{
-        		$cnt = count($val);
-        		if($cnt<$elements)
-        		{
-        			for($i=0;$i<($elements-$cnt);$i++)
-        				$showcase_items[$key][] = FALSE;
-				}
-			}
-			
-			//print_r($showcase_items);
-		}
-        $tpl->assign('std','/'.$gallery->photo_dir_pref);
-        $tpl->assign('th',$gallery->thumb_dir.'/');
-        $tpl->assign('showcase',$showcase_items);
-    }
 
+    if ($proc_cat == 0) {
+        $content_res = $db->get_extreme_value($page->table, 'content', 'id=\'' . $act_page_id . '\'');
+        $tpl->assign('page_content', $content_res->content);
+
+        if ($showcase = $gallery->showcase_items()) {
+            $elements       = 3;
+            $showcase_items = array_chunk($showcase, $elements);
+            //
+            foreach ($showcase_items as $key => $val) {
+                $cnt = count($val);
+                if ($cnt < $elements) {
+                    for ($i = 0; $i < ($elements - $cnt); $i ++) {
+                        $showcase_items[$key][] = false;
+                    }
+                }
+            }
+
+            //print_r($showcase_items);
+        }
+        $tpl->assign('std', '/' . $gallery->photo_dir_pref);
+        $tpl->assign('th', $gallery->thumb_dir . '/');
+        $tpl->assign('showcase', $showcase_items);
+    }
 }
 
 if ($act_item > 0) {
@@ -115,6 +118,10 @@ if ($act_item > 0) {
 
         $gallery_page_name = $single[0]->item_name;
     }
+    else {
+        include(PUBPATH . '404.php');
+        exit();
+    }
 }
 
 if ($gallery_page_name == '') {
@@ -129,8 +136,6 @@ $page_html='';
 $tpl->assign('scripts',array('/js/site/highslide.packed.js', '/js/site/jquery.cycle.all.js'));
 
 include(PUBPATH . 'header.php');
-
-
 
                         // CATALOG CONTENT
 
@@ -156,7 +161,7 @@ if ($act_item > 0) {
 
 
 }
-elseif($proc_cat>=0) {
+elseif ($proc_cat >= 0) {
 
 
     if (isset($_GET['page'])) {
@@ -193,7 +198,7 @@ elseif($proc_cat>=0) {
     $tpl->assign('catalog_menu', $cat_nav);
 
     $page_html .= $tpl->fetch('catalog_category.tpl');
-    
+
 }
 
 include(PUBPATH . 'footer.php');
