@@ -118,9 +118,12 @@
 								<p><a href="{$item->link}" title="подробнее...">{$item->item_name}</a></p>
 							</div>
 							
-							<div class="preview">{if $item->photo}
+							<div class="preview">
+								{if $item->photo}
 								<a href="{$big}{$item->photo}" class="highslide"><img src="{$thumbs}{$item->photo}" alt="" /></a>
-									<div class="highslide-caption">{$item->item_name}</div>{/if}</div>
+								<div class="highslide-caption">{$item->item_name}</div>
+								{/if}
+							</div>
 							
 							<div class="spec">
 								<div class="details"><a rel="nofollow" href="{$item->link}" title="подробнее...">{$item->short}</a></div>

@@ -624,18 +624,13 @@ div.preview:empty + div.spec {
 .spec div.inbasket {
     background: rgb(208, 219, 210) url(images/put.gif) no-repeat 95% center;
     cursor: pointer;
-    /* height: 16px; */
     margin-top: 2px;
-    /* overflow: hidden; */
-    /* text-align: right; */
     padding: 4px 10px;
     border: 2px solid #475972;
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     width: 90px;
-    /*float: right;*/
-    /*position: relative;*/
     bottom: 3px;
     right: 2px;
     color: #E93388;
@@ -1323,7 +1318,7 @@ table.full {
     border: 1px solid #E9BE94;
 }
 
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 1000px) {
 
     .right_top_block {
         position: absolute;
@@ -1360,6 +1355,22 @@ table.full {
         width: 234px;
         height: 22px;
         margin-right: 2px;
+    }
+
+    div.spec {
+        height:205px;
+    }
+
+    .spec div.cost {
+        height: 40px;
+    }
+
+    .spec div.inbasket {
+        position:static;
+    }
+
+    .card {
+        height: 275px;
     }
 }
 
@@ -1491,7 +1502,7 @@ table.full {
         border: 1px solid #475547;
         /*float: none;*/
         margin: 0 0 5px 0;
-        height: 238px;
+        height: 275px;
         overflow: hidden;
         box-sizing: border-box;
         -webkit-box-sizing: border-box;
