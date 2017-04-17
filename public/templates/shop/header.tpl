@@ -6,7 +6,7 @@
 <meta name="description" content="{$header_data.description}" />
 <meta name="keywords" content="{$header_data.keywords}" />
 <title>{$header_data.title}</title>
-<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.5.6" />
+<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.5.7" />
 <!--[if IE 6]> <link href="{$theme_path}/style_ie6.css" rel="stylesheet" type="text/css"> <![endif]-->
 <link rel="stylesheet" type="text/css" href="{$theme_path}/highslide.css" />
 <link rel="stylesheet" type="text/css" media="print" href="{$theme_path}/print.css" />
