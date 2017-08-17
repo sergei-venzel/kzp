@@ -63,7 +63,7 @@
                     <div class="top_img noprint" id="iSlide">
                         <img src="{$theme_path}/images/top_img.jpg" alt="" title="" />
                         <img src="{$theme_path}/images/first.jpg" alt="British Dragon, Neo Labs" title="Только лучшие производители" />
-                        <img src="{$theme_path}/images/second-2.jpg" alt="" title="Гарантия качества" />
+                        <img src="{$theme_path}/images/second.jpg?v=2" alt="" title="Гарантия качества" />
                         <img src="{$theme_path}/images/third.jpg" alt="" title="Консультации на форуме" />
                     </div>
                 </div>
