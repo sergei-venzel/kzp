@@ -8,10 +8,12 @@ AddDefaultCharset UTF-8
 RewriteEngine On
 RewriteBase /
 
+
+
 #RewriteCond %{HTTP_HOST} kachay-zhelezo.com
+#RewriteCond %{HTTP_HOST} ^www.kachay-zhelezo.com
 #RewriteRule ^(.*)$ http://kachay-zhelezo.net/$1 [R=301,L]
 
-#RewriteCond %{HTTP_HOST} ^www.kachay-zhelezo.com
 #RewriteRule ^(.*)$ http://kachay-zhelezo.com/$1 [R=301,L]
 
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]

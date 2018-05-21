@@ -26,40 +26,10 @@ class db extends mysqli
 
     public function __construct()
     {
-
-        /*if(!is_resource($this->db_conn))
-        {
-        	$this->db_conn = @mysql_connect($this->db_host, $this->db_login, $this->db_pswd);
-		}
-        if(!is_resource($this->db_conn) && mysql_errno()=='1040') {
-        	sleep(2);
-        	$this->db_conn = @mysql_connect($this->db_host, $this->db_login, $this->db_pswd);
-        }
-
-        if($this->db_conn) {
-            
-            if(@mysql_select_db($this->db_name,$this->db_conn)) {
-                
-                $this->m_query('SET NAMES cp1251');
-            }
-            else {
-                
-                $this->err_report(mysql_error($this->db_conn), "\r\n".date('r').' - Internal problem with THIS DB: ');
-                $this->db_conn=NULL;
-            }
-        }
-        else {
-            
-            $this->err_report(mysql_errno().': '.mysql_error(), "\r\n".date('r').' - Connection to DB: ');
-        }*/
-        /*if(!is_resource($this->db_conn))
-        	$this->db_conn = $this->_connect();
-        $this->selet_db();*/
         //$this->createConnection();
-        parent::__construct($this->db_host, $this->db_login, $this->db_pswd);
-
+        parent::__construct(db_host, db_login, db_pswd);
+        $this->select_db($this->db_name);
     }
-
 
     public static function getInstance()
     {
@@ -73,12 +43,10 @@ class db extends mysqli
 
     private function createConnection()
     {
-
-
-        $this->db_conn = @mysql_connect($this->db_host, $this->db_login, $this->db_pswd);
+        $this->db_conn = @mysql_connect(db_host, db_login, db_pswd);
         if ( ! is_resource($this->db_conn) && mysql_errno() == '1040') {
             sleep(1);
-            $this->db_conn = @mysql_connect($this->db_host, $this->db_login, $this->db_pswd);
+            $this->db_conn = @mysql_connect(db_host, db_login, db_pswd);
         }
 
         $this->selet_db();
@@ -94,7 +62,7 @@ class db extends mysqli
         //$this->query_cache = array();
         /*logger(array_keys($this->query_cache),'dbg.inc');
         logger($this->query_arr,'dbg.inc');*/
-        $this->db_close();
+//        $this->db_close();
     }
 
 
@@ -103,10 +71,10 @@ class db extends mysqli
 
         $resource = null;
         if ( ! is_resource($this->db_conn)) {
-            $resource = @mysql_connect($this->db_host, $this->db_login, $this->db_pswd);
+            $resource = @mysql_connect(db_host, db_login, db_pswd);
             if ( ! is_resource($resource) AND mysql_errno() == '1040') {
                 sleep(1);
-                $resource = @mysql_connect($this->db_host, $this->db_login, $this->db_pswd);
+                $resource = @mysql_connect(db_host, db_login, db_pswd);
             }
         }
 
@@ -132,11 +100,12 @@ class db extends mysqli
 
     public function up_connection()
     {
-        if ( ! is_resource($this->db_conn) || get_resource_type($this->db_conn) != self::RESOURCE_TYPE) {
-            return $this->createConnection();
-        }
-
-        return $this->db_conn;
+//        if ( ! is_resource($this->db_conn) || get_resource_type($this->db_conn) != self::RESOURCE_TYPE) {
+//            return $this->createConnection();
+//        }
+//
+//        return $this->db_conn;
+        return true;
     }
 
 
