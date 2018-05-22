@@ -224,6 +224,7 @@ if(isset($_POST['save_file'])) {
         $data->meta_description = isset($_POST['meta_description']) ? trim(strip_tags($_POST['meta_description'])) : '';
         $data->title            = trim(strip_tags(str_replace(array("\r", "\n"), ' ', $_POST['title'])));
         $data->price            = trim(strip_tags($_POST['item_price']));
+        $data->discount         = floatval(trim(strip_tags($_POST['discount'])));
         $data->quantity         = (int) $_POST['item_quantity'];
         $showcase               = 0;
         if (isset($_POST['showcase']) AND (int) $_POST['showcase'] === 1) {
@@ -371,7 +372,7 @@ if($category) $category=$category[0];
 
                         echo $html->wysiwyg_init($relative.'admin/',$gallery->photo_dir_pref.$cat_id.$gallery->anysrc_dir, 'advanced', 'teditor');
 
-                        if($item=$db->get_extreme_value($gallery->photo_table,'id,publish,photo,item_name,c_links,c_gal,short,price,quantity,showcase,keywords,title,meta_description',' id=\''.$id.'\''))
+                        if($item = $db->get_extreme_value($gallery->photo_table,'id,publish,photo,item_name,c_links,c_gal,short,price,discount,quantity,showcase,keywords,title,meta_description',' id=\''.$id.'\''))
                         {
 
                             $form['hidden_fields'][] = array('type'  => 'hidden',
@@ -448,6 +449,12 @@ if($category) $category=$category[0];
                                       'type'  => 'text',
                                       'name'  => 'item_price',
                                       'value' => htmlspecialchars($item->price),
+                                      'class' => 'long',
+                                ),
+                                array('txt'   => 'Акция',
+                                      'type'  => 'text',
+                                      'name'  => 'discount',
+                                      'value' => floatval($item->discount),
                                       'class' => 'long',
                                 ),
                                 array('txt'   => 'Количество',

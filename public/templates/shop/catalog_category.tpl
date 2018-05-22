@@ -87,12 +87,16 @@
 								<p><a rel="nofollow" href="/?set={$catalog_page}&gallery={$record->cat_id}&item={$record->id}"><img src="{$std}{$record->cat_id}{$th}{$record->photo}" alt="" title="{$record->item_name|escape:'html'}" /></a></p>
 								{/if}
 								{$record->short}
-									<p>Цена:
-										{*<br /><b>USD</b>:&nbsp;{$record->price}*}
+									<p class="cost {if $record->discount > 0}discount{/if}">Цена:
+
 										{if $record->ruprice}
-											<br /><b>RUR</b>:&nbsp;{$record->ruprice}
+											<br /><b>RUR</b>:&nbsp;<span class="real">{$record->ruprice}</span>
 										{else}
-											<br /><b>USD</b>:&nbsp;{$record->price}
+											<br /><b>USD</b>:&nbsp;<span class="real">{$record->price}</span>
+										{/if}
+
+										{if $record->discount > 0}
+											{if $record->rudiscount}<span class="sale">{$record->rudiscount}</span>{else}{$record->discount}{/if}
 										{/if}
 									</p>
 								{else}&nbsp;{/if}
@@ -127,14 +131,17 @@
 							
 							<div class="spec">
 								<div class="details"><a rel="nofollow" href="{$item->link}" title="подробнее...">{$item->short}</a></div>
-								<div class="cost">
+								<div class="cost {if $item->discount > 0}discount{/if}">
 									{if $item->price != 0}
 									Цена:
 									{if $item->ruprice}
-									<br /><b>RUR</b>:&nbsp;<span>{$item->ruprice}</span>
+									<br /><b>RUR</b>:&nbsp;<span class="real">{$item->ruprice}</span>
                                         {else}
-                                    <br /><b>USD</b>:&nbsp;<span>{$item->price}</span>
+                                    <br /><b>USD</b>:&nbsp;<span class="real">{$item->price}</span>
 									{/if}
+										{if $item->discount > 0}
+											{if $item->rudiscount}<span class="sale">{$item->rudiscount}</span>{else}{$item->discount}{/if}
+										{/if}
                                     {/if}
 								</div>
 								{if $item->price != 0 AND $basket_link}<div class="inbasket" id="com_{$item->id}" title="Добавить в корзину">купить</div>{/if}

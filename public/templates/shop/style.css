@@ -662,6 +662,12 @@ div.preview:empty + div.spec {
 	/*display: block;*/
 	font-weight: bold;
 }
+
+.cost.discount .real {
+    color:#475547;
+    text-decoration:#E9337C line-through;
+    font-weight:normal;
+}
 			
 			/*  CATALOG  */
 

@@ -1,10 +1,14 @@
 <?php defined('SYSPATH') or die('Out of');
 error_reporting(E_ALL);
 
-if(isset($_GET['gallery'])) $proc_cat = (int)$_GET['gallery'];
-else $proc_cat=0;
+if (isset($_GET['gallery'])) {
+    $proc_cat = (int) $_GET['gallery'];
+}
+else {
+    $proc_cat = 0;
+}
 
-$display_main_picture = $proc_cat==0 ? TRUE : FALSE;
+$display_main_picture = $proc_cat == 0 ? true : false;
 
 if (isset($_GET['item'])) {
     $act_item = (int) $_GET['item'];
@@ -25,13 +29,18 @@ if (isset($_GET['add_to_basket']) AND isset($_SESSION['basket']['is_active'])) {
         $_SESSION['basket']['order'][(int) $_GET['add_to_basket']] = 1;
     }
 
-
-    //write_log(__LINE__,'cat_menu.txt');
     $result = $gallery->count_basket_items($_SESSION['basket']['order']);
+
     if ($result !== false) {
         $basket_sum = 0;
         foreach ($result as $item) {
-            $basket_sum += $item->{'sum_' . $item->id};
+            if ($item->{'sumdiscount_' . $item->id} > 0) {
+                $basket_sum += $item->{'sumdiscount_' . $item->id};
+            }
+            else {
+
+                $basket_sum += $item->{'sum_' . $item->id};
+            }
         }
         if ($gallery->cur_factor > 0) {
             $basket_sum = $basket_sum * $gallery->cur_factor;
@@ -43,8 +52,7 @@ if (isset($_GET['add_to_basket']) AND isset($_SESSION['basket']['is_active'])) {
     else {
         $response->err = 1;
     }
-    //write_log(__LINE__,'cat_menu.txt');
-    //sleep(30);
+
     echo json_encode($response);
     exit;
 }
@@ -92,7 +100,6 @@ if ($proc_cat >= 0) {
                     }
                 }
             }
-
             //print_r($showcase_items);
         }
         $tpl->assign('std', '/' . $gallery->photo_dir_pref);
@@ -103,7 +110,7 @@ if ($proc_cat >= 0) {
 
 if ($act_item > 0) {
 
-    $single = $db->select_obj($gallery->photo_table, 'id,item_name,photo,up_files,spec,short,c_gal,publish,price,quantity,keywords,title,meta_description', 'publish=1 and id=\'' . $act_item . '\'', 'file: ' . __FILE__ . 'line:' . __LINE__);
+    $single = $db->select_obj($gallery->photo_table, 'id,item_name,photo,up_files,spec,short,c_gal,publish,price,discount,quantity,keywords,title,meta_description', 'publish=1 and id=\'' . $act_item . '\'', 'file: ' . __FILE__ . 'line:' . __LINE__);
 
     if ($single) {
         $title            = ! empty($single[0]->title) ? $single[0]->title : $single[0]->item_name;
@@ -131,13 +138,13 @@ else {
     $tpl->assign('head_line', $gallery_page_name);
 }
 
-$page_html='';
+$page_html = '';
 
-$tpl->assign('scripts',array('/js/site/highslide.packed.js', '/js/site/jquery.cycle.all.js'));
+$tpl->assign('scripts', array('/js/site/highslide.packed.js', '/js/site/jquery.cycle.all.js'));
 
 include(PUBPATH . 'header.php');
 
-                        // CATALOG CONTENT
+// CATALOG CONTENT
 
 if ($act_item > 0) {
 
@@ -146,10 +153,12 @@ if ($act_item > 0) {
     $tpl->assign('big', '/' . $gallery->photo_dir_pref . $proc_cat . '/');
     $item_data = false;
     if (isset($single[0])) {
-        $item_data        = $single[0];
-        $item_data->price = number_format(floatval($item_data->price), 1, '.', ' ');
+        $item_data           = $single[0];
+        $item_data->price    = number_format(floatval($item_data->price), 1, '.', ' ');
+        $item_data->discount = number_format(floatval($item_data->discount), 1, '.', ' ');
         if ($gallery->cur_factor > 0) {
-            $item_data->ruprice = number_format(floatval($item_data->price * $gallery->cur_factor), 1, '.', ' ');
+            $item_data->ruprice    = number_format(floatval($item_data->price * $gallery->cur_factor), 1, '.', ' ');
+            $item_data->rudiscount = number_format(floatval($item_data->discount * $gallery->cur_factor), 1, '.', ' ');
         }
     }
     $cat_nav = array();
@@ -158,8 +167,6 @@ if ($act_item > 0) {
     $tpl->assign('catalog_menu', $cat_nav);
     $tpl->assign('item', $item_data);
     $page_html .= $tpl->fetch('catalog_item.tpl');
-
-
 }
 elseif ($proc_cat >= 0) {
 
@@ -198,7 +205,6 @@ elseif ($proc_cat >= 0) {
     $tpl->assign('catalog_menu', $cat_nav);
 
     $page_html .= $tpl->fetch('catalog_category.tpl');
-
 }
 
 include(PUBPATH . 'footer.php');
@@ -206,5 +212,5 @@ include(PUBPATH . 'footer.php');
 // CACHING
 echo $page_html;
 
-store_cache($page_html,$_SERVER['QUERY_STRING'],isset($_GET['preview'])?$_GET['preview']:false);
+store_cache($page_html, $_SERVER['QUERY_STRING'], isset($_GET['preview']) ? $_GET['preview'] : false);
 

@@ -12,7 +12,7 @@ class Registry
     );
 
     private          $params   = array(
-        'db' => array(db_host, db_login, db_pswd),
+        'db' => array(db_host, db_login, db_pswd, db_name),
     );
 
 

@@ -75,15 +75,17 @@
 					
 					<div class="spec">
 						<div class="details">{$item->short}</div>
-						<div class="cost">
+						<div class="cost {if $item->discount > 0}discount{/if}">
 						{if $item->price != 0}
 						Цена:
-							{*<br /><b>USD</b>:&nbsp;<span>{$item->price}</span>*}
 						{if $item->ruprice}
-						<br /><b>RUR</b>:&nbsp;<span>{$item->ruprice}</span>
+						<br /><b>RUR</b>:&nbsp;<span class="real">{$item->ruprice}</span>
                         {else}
-                            <br /><b>USD</b>:&nbsp;<span>{$item->price}</span>
+                            <br /><b>USD</b>:&nbsp;<span class="real">{$item->price}</span>
 						{/if}
+							{if $item->discount > 0}
+								{if $item->rudiscount}<span class="sale">{$item->rudiscount}</span>{else}{$item->discount}{/if}
+							{/if}
 						{/if}
 						</div>
 						{if $item->price != 0 AND $basket_link}<div class="inbasket" id="com_{$item->id}" title="Добавить в корзину">купить</div>{/if}

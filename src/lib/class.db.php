@@ -24,20 +24,41 @@ class db extends mysqli
     private          $query_arr   = array();
 
 
-    public function __construct()
+    public function __construct($host, $user, $pswd, $dbname = '', $port = null)
     {
         //$this->createConnection();
-        parent::__construct(db_host, db_login, db_pswd);
+        parent::__construct($host, $user, $pswd);
         $this->select_db($this->db_name);
     }
 
-    public static function getInstance()
+
+    public static function getInstance($host, $userName, $passwd, $dbName = null, $port = null)
     {
-        if ( ! self::$instance instanceof db) {
-            self::$instance = new self();
+//        if ( ! self::$instance instanceof db) {
+//            self::$instance = new self();
+//        }
+//
+//        return self::$instance;
+        $connection = new Db($host, $userName, $passwd, $dbName, $port);
+        if (mysqli_connect_error()) {
+//			new Error (mysqli_connect_error(), mysqli_connect_errno());
+            throw new MySqliException(mysqli_connect_error(), mysqli_connect_errno(), '');
+        }
+        if ( ! $connection->set_charset("utf8")) {
+            //new Error (mysqli_connect_error(), mysqli_connect_errno());
+            throw new MySqliException(mysqli_connect_error(), mysqli_connect_errno(), 'Set charset');
         }
 
-        return self::$instance;
+//        $offset = sprintf('%+d:%02d', HOURS_OFFSET, MINUTES_OFFSET);
+//
+//        $query = 'SET time_zone=\''. $offset .'\'';
+//        if (!$connection->query($query)) {
+//            throw new MySqliException(mysqli_connect_error(), mysqli_connect_errno(), $query);
+//        }
+
+        $connection->select_db($dbName);
+
+        return $connection;
     }
 
 
@@ -49,7 +70,7 @@ class db extends mysqli
             $this->db_conn = @mysql_connect(db_host, db_login, db_pswd);
         }
 
-        $this->selet_db();
+//        $this->selet_db();
 
         return $this->db_conn;
     }
@@ -93,7 +114,7 @@ class db extends mysqli
             }
         }
         else {
-            $this->err_report(mysql_errno() . ': ' . mysql_error(), "\r\n" . date('r') . ' - Connection to DB: ');
+            $this->err_report(mysql_errno() . ': ' . $this->error, "\r\n" . date('r') . ' - Connection to DB: ');
         }
     }
 
@@ -164,11 +185,12 @@ class db extends mysqli
     }
 
 
-    private function free_result($result)
+    /**
+     * @param MySQLi_Result $result
+     */
+    private function _free_result($result)
     {
-        if (is_resource($result)) {
-            @mysql_free_result($result);
-        }
+        $result->free_result();
     }
 
 
@@ -179,7 +201,7 @@ class db extends mysqli
         }
 
         if ( ! is_numeric($value)) {
-            $value = "'" . mysql_real_escape_string($value) . "'";
+            $value = "'" . $this->esc($value) . "'";
         }
 
         return $value;
@@ -188,17 +210,12 @@ class db extends mysqli
 
     public function esc($val)
     {
-        return mysql_real_escape_string($val);
+        return $this->real_escape_string($val);
     }
 
 
-    function err_report($err, $descr = '')
+    private function err_report($err, $descr = '')
     {
-
-        $headers     = 'From: ' . support . "\r\n" .
-                       'Reply-To: ' . support . "\r\n" .
-                       'X-Mailer: PHP/' . phpversion();
-        $from_server = 'Message from: ' . $_SERVER['HTTP_HOST'] . "\r\n";
         if (PRODUCTION === false) {
             throw new Exception($descr . $err);
         }
@@ -208,31 +225,30 @@ class db extends mysqli
     }
 
 
-    public function db_close()
+    public function db_close($fake = true)
     {
-        if (is_resource($this->db_conn)) {
-            @mysql_close($this->db_conn);
-            $this->db_conn = null;
-        }
+//        if (is_resource($this->db_conn)) {
+//            @mysql_close($this->db_conn);
+//            $this->db_conn = null;
+//        }
     }
 
 
     public function select_obj($table, $fields = '*', $where = '', $place = '', $extra = '')
     {
-
         $return_result = false;
         $where != '' ? $clause = ' WHERE ' . $where : $clause = '';
 
         $query = 'SELECT ' . $fields . ' FROM ' . $table . ' ' . $clause . ' ' . $extra;
-        //$t = FirePHP::getInstance(TRUE)->fb($query);
+
         if ($res = $this->m_query($query, __METHOD__)) {
 
             $res_arr = array();
-            while ($result = mysql_fetch_object($res)) {
+            while ($result = $res->fetch_object()) {
 
                 $res_arr[] = $result;
             }
-            $this->free_result($res);
+            $this->_free_result($res);
 
             if ( ! empty($res_arr)) {
                 $return_result = $res_arr;
@@ -248,11 +264,11 @@ class db extends mysqli
         $result = array();
         if ($res = $this->m_query($query)) {
 
-            while ($row = mysql_fetch_assoc($res)) {
+            while ($row = $res->fetch_assoc()) {
                 $result[] = $row;
             }
 
-            $this->free_result($res);
+            $this->_free_result($res);
         }
 
         if ( ! empty($result)) {
@@ -265,14 +281,13 @@ class db extends mysqli
 
     public function _query($query = '', $place = '')
     {
-
         $res_arr = array();
         if ($res = $this->m_query($query)) {
-            while ($result = mysql_fetch_object($res)) {
+            while ($result = $res->fetch_object()) {
                 $res_arr[] = $result;
             }
 
-            $this->free_result($res);
+            $this->_free_result($res);
 
             if ( ! empty($res_arr)) {
                 return $res_arr;
@@ -291,28 +306,20 @@ class db extends mysqli
     {
         $r_result = false;
 
-        if ($res = $this->m_query($query, __METHOD__)) {
-            if (is_resource($res)) {
-                $tmp = array();
-                while ($result = mysql_fetch_object($res)) {
+        $res = $this->query_result($query, __METHOD__);
 
-                    $tmp[] = $result;
-                }
-                $this->free_result($res);
-                if ( ! empty($tmp)) {
-                    $r_result = $tmp;
-                }
+        if ( ! $res instanceof MySQLi_Result) {
+            $r_result = $this->affected_rows;
+        }
+        else {
+            $tmp = array();
+            while ($result = $res->fetch_object()) {
+
+                $tmp[] = $result;
             }
-            else {
-                //$a = FirePHP::getInstance(TRUE)->fb(mysql_affected_rows());
-                //$r = FirePHP::getInstance(TRUE)->fb(gettype($res));
-                $aff_rows = mysql_affected_rows();
-                if ($aff_rows > 0) {
-                    $r_result = $aff_rows;
-                }
-                else {
-                    $r_result = true;
-                }
+            $this->_free_result($res);
+            if ( ! empty($tmp)) {
+                $r_result = $tmp;
             }
         }
 
@@ -353,22 +360,21 @@ class db extends mysqli
                 }
 
                 $query = 'INSERT ' . $ignore_statement . ' INTO ' . $table . ' (' . join(',', $fields) . ') VALUES (' . join(',', $values) . ')';
-                if ($res = @mysql_query($query)) {
-                    $ins_id = @mysql_insert_id();
+                if ($res = $this->query($query)) {
+
+                    $ins_id = $this->insert_id;
                     if ($ins_id === 0) {
                         $ins_id = true;
                     }
-
-                    $this->free_result($res);
 
                     return $ins_id;
                 }
                 else {
                     if (PRODUCTION === false) {
-                        throw new Exception(mysql_error() . "\r\n\r\n" . $query);
+                        throw new Exception($this->error . "\r\n\r\n" . $query);
                     }
                     else {
-                        $this->err_report(mysql_error() . "\r\n\r\n" . $query, 'INSERT problem in ' . __CLASS__ . '->' . __FUNCTION__ . ': ' . "\r\n");
+                        $this->err_report($this->error . "\r\n\r\n" . $query, 'INSERT problem in ' . __CLASS__ . '->' . __FUNCTION__ . ': ' . "\r\n");
 
                         return false;
                     }
@@ -384,9 +390,8 @@ class db extends mysqli
     }
 
 
-    function update_obj($table, $data = false, $where = '', $ignore = null)
+    public function update_obj($table, $data = false, $where = '', $ignore = null)
     {
-
         if (is_object($data)) {
 
             $where != '' ? $clause = ' WHERE ' . $where : $clause = '';
@@ -404,91 +409,77 @@ class db extends mysqli
                 }
 
                 $query = 'UPDATE ' . $ignore_statement . ' ' . $table . ' SET ' . join(', ', $update) . ' ' . $clause;
-                if ($res = @mysql_query($query)) {
-                    $aff_rows = @mysql_affected_rows();
-                    $this->free_result($res);
-                    if ($aff_rows) {
-                        return $aff_rows;
-                    }
-                    else {
-                        return true;
-                    }
-                }
-                else {
-                    $this->err_report(mysql_error() . "\r\n\r\n" . $query, 'UPDATE problem in ' . __METHOD__ . ': ' . "\r\n");
+
+                if ( ! $res = $this->query($query)) {
+
+                    $this->err_report($this->error . "\r\n\r\n" . $query, 'UPDATE problem in ' . __METHOD__ . ': ' . "\r\n");
 
                     return false;
                 }
-            }
-            else {
-                return false;
+
+                if ( ! $rows = $this->affected_rows) {
+                    $rows = true;
+                }
+
+                return $rows;
             }
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
 
-    function update_int_obj($table, $data = false, $where = '')
+    public function update_int_obj($table, $data = false, $where = '')
     {
-
         if (is_object($data)) {
 
             $where != '' ? $clause = ' WHERE ' . $where : $clause = '';
             $data_arr = get_object_vars($data);
+
             if (count($data_arr)) {
 
                 foreach ($data_arr as $key => $val) {
 
                     $update[] = '`' . $key . '`=' . $val;
                 }
+
                 $query = 'UPDATE ' . $table . ' SET ' . join(', ', $update) . ' ' . $clause;
-                if ($res = @mysql_query($query)) {
-                    $aff_rows = @mysql_affected_rows();
-                    $this->free_result($res);
-                    if ($aff_rows) {
-                        return $aff_rows;
-                    }
-                    else {
-                        return true;
-                    }
-                }
-                else {
-                    $this->err_report(mysql_error() . "\r\n\r\n" . $query, 'UPDATE problem in ' . __METHOD__ . ': ' . "\r\n");
+
+                if ( ! $res = $this->query($query)) {
+
+                    $this->err_report($this->error . "\r\n\r\n" . $query, 'UPDATE problem in ' . __METHOD__ . ': ' . "\r\n");
 
                     return false;
                 }
-            }
-            else {
-                return false;
+
+                if ( ! $rows = $this->affected_rows) {
+                    $rows = true;
+                }
+
+                return $rows;
             }
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
 
-    function remove_obj($table, $clause = '')
+    public function remove_obj($table, $clause = '')
     {
-
         $query = 'delete from ' . $table . ' ' . $clause;
-        if (@mysql_query($query)) {
-            return true;
-        }
-        else {
-            $this->err_report(mysql_error() . "\r\n\r\n" . $query, 'DELETE problem in ' . __CLASS__ . '->' . __FUNCTION__ . ': ' . "\r\n");
+        if ( ! $this->query($query)) {
+
+            $this->err_report($this->error . "\r\n\r\n" . $query, 'DELETE problem in ' . __CLASS__ . '->' . __FUNCTION__ . ': ' . "\r\n");
 
             return false;
         }
+
+        return true;
     }
 
 
-    function create_table($data = array())
+    public function create_table($data = array())
     {
-
-        //CREATE TABLE `spec_1` (`item_id` INT( 11 ) NOT NULL);
         if (count($data)) {
 
             if ($data['tbl']) {
@@ -499,28 +490,17 @@ class db extends mysqli
 
                     $query .= '(' . join(', ', $data['fields']) . ')';
 
-                    if ($res = @mysql_query($query)) {
-                        $this->free_result($res);
+                    if ($res = $this->query($query)) {
 
                         return true;
                     }
-                    else {
-                        $this->err_report(mysql_error() . "\r\n\r\n" . $query, 'CREATE TABLE problem in ' . __METHOD__ . ': ' . "\r\n");
+                }
+            }
+        }
 
-                        return false;
-                    }
-                }
-                else {
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
+        $this->err_report($this->error . "\r\n\r\n" . $query, 'CREATE TABLE problem in ' . __METHOD__ . ': ' . "\r\n");
+
+        return false;
     }
 
 
@@ -547,19 +527,15 @@ class db extends mysqli
                 $query .= ' ' . $format['extra'];
             }
 
-            // NOW - query
-            if ($res = $this->m_query($query, __METHOD__)) {
-                $this->free_result($res);
-            }
+            $this->m_query($query, __METHOD__);
         }
 
         return true;
     }
 
 
-    function alter_table($tbl_name = '', $data = array(), $type = '')
+    private function alter_table($tbl_name = '', $data = array(), $type = '')
     {
-
         if (count($data)) {
 
             $query = '';
@@ -588,31 +564,29 @@ class db extends mysqli
             }
 
             if ($res = $this->m_query($query, __METHOD__)) {
-                $this->free_result($res);
 
                 return true;
             }
             else {
-                $this->err_report(mysql_error() . "\r\n\r\n" . $query, 'ALTER TABLE problem in ' . __METHOD__ . ': ' . "\r\n");
+                $this->err_report($this->error . "\r\n\r\n" . $query, 'ALTER TABLE problem in ' . __METHOD__ . ': ' . "\r\n");
 
                 return false;
             }
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
 
-    function drop_table($tbl_name = '')
+    public function drop_table($tbl_name = '')
     {
-
         $query = 'DROP TABLE IF EXISTS `' . $tbl_name . '`';
-        if (@mysql_query($query)) {
+
+        if ($this->query($query)) {
             return true;
         }
         else {
-            $this->err_report(mysql_error() . "\r\n\r\n" . $query, 'DROP TABLE problem in ' . __CLASS__ . '->' . __FUNCTION__ . ': ' . "\r\n");
+            $this->err_report($this->error . "\r\n\r\n" . $query, 'DROP TABLE problem in ' . __CLASS__ . '->' . __FUNCTION__ . ': ' . "\r\n");
 
             return false;
         }
@@ -625,10 +599,10 @@ class db extends mysqli
 
         $query = 'SHOW TABLES FROM `' . $this->db_name . '`';
         $res   = $this->m_query($query, __METHOD__);
-        while ($result = mysql_fetch_object($res)) {
+        while ($result = $res->fetch_object()) {
             $tables[] = $result->{Tables_in_ . $this->db_name};
         }
-        $this->free_result($res);
+        $this->_free_result($res);
 
         return $tables;
     }
@@ -639,10 +613,10 @@ class db extends mysqli
         $fields = array();
         $query  = 'SHOW FIELDS FROM `' . $table_name . '`';
         $res    = $this->m_query($query, __METHOD__);
-        while ($result = mysql_fetch_object($res)) {
+        while ($result = $res->fetch_object()) {
             $fields[] = $result->Field;
         }
-        $this->free_result($res);
+        $this->_free_result($res);
         if ( ! empty($fields)) {
             return $fields;
         }
@@ -659,7 +633,6 @@ class db extends mysqli
 
     public function check_fields($table_name, $format = array())
     {
-        //$t = FirePHP::getInstance(TRUE)->fb($tables);
         $existing_tables = $this->list_tables();
         if ( ! in_array($table_name, $existing_tables)) {
             $this->create_table_by_format($table_name, $format);
@@ -704,9 +677,8 @@ class db extends mysqli
     }
 
 
-    function get_extreme_value($tbl = '', $value_name = '', $where = false, $place = '')
+    public function get_extreme_value($tbl = '', $value_name = '', $where = false, $place = '')
     {
-
         if ($where) {
             $where .= ' LIMIT 0,1';
         }
@@ -746,41 +718,25 @@ class db extends mysqli
 
     private function m_query($query, $method = '')
     {
-        /*logger('-'.mysql_thread_id($this->db_conn),'dbg.inc');
-        */
-        //$this->up_connection();
-        /*if(!is_resource($this->db_conn) || !mysql_ping($this->db_conn)) {
-            $this->createConnection();
-        }*/
-
         return $this->query_result($query, $method);
     }
 
 
+    /**
+     * @param        $query
+     * @param string $method
+     *
+     * @return bool|\mysqli_result
+     * @throws \Exception
+     */
     private function query_result($query, $method = '')
     {
-        $res = false;
-        if ( ! $res = @mysql_query($query)) {
-            $errMess = mysql_error();
-            $this->err_report($errMess . "\r\n\r\n" . $query, '--QUERY problem in ' . $method . ': ' . "\r\n");
-            throw new Exception($method . ': ' . $errMess);
-            /*if(mysql_errno() == 1045) {
+        if ( ! $res = $this->query($query)) {
 
-                $this->createConnection();
-                if(!$res = mysql_query($query)) {
-
-                    $this->err_report($errMess."\r\n\r\n".$query,'--QUERY problem in '.$method.': '."\r\n");
-                    throw new Exception($method.': ' . $errMess);
-                }
-            }*/
+            $this->err_report($this->error . "\r\n\r\n" . $query, '--QUERY problem in ' . $method . ': ' . "\r\n");
+            throw new Exception($method . ': ' . $this->error);
         }
 
         return $res;
-    }
-
-
-    private function query_hash($sql)
-    {
-        return sha1($sql);
     }
 }
