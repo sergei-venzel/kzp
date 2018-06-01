@@ -397,6 +397,14 @@ li.current ul a:visited
     color:#1D34A6;
 }
 
+.arrow li:nth-of-type(2) a,
+.arrow li:nth-of-type(2) a:visited/*,
+.arrow li:last-child a,
+.arrow li:last-child a:visited*/
+{
+    color:#f00;
+}
+
 .arrow a:hover {
     color: #7c7c7c;
     text-decoration: underline;
@@ -1317,7 +1325,7 @@ table.full {
 .showcase-item {
     float: left;
     width: calc((100% - 18px) / 3);
-    height: 300px;
+    height: 380px;
     overflow: hidden;
     padding: 4px;
     margin: 0 3px 6px 3px;
