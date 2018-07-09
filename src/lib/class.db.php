@@ -716,7 +716,7 @@ class db extends mysqli
     }
 
 
-    private function m_query($query, $method = '')
+    public function m_query($query, $method = '')
     {
         return $this->query_result($query, $method);
     }
@@ -731,9 +731,11 @@ class db extends mysqli
      */
     private function query_result($query, $method = '')
     {
-        if ( ! $res = $this->query($query)) {
-
-            $this->err_report($this->error . "\r\n\r\n" . $query, '--QUERY problem in ' . $method . ': ' . "\r\n");
+        try {
+            $res = $this->query($query);
+        }
+        catch(Exception $e) {
+            $this->err_report($this->error . "\r\n\r\n" . $e->getMessage(), 'In ' . $method . ': ' . "\r\n");
             throw new Exception($method . ': ' . $this->error);
         }
 
