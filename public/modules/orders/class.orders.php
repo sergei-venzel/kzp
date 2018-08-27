@@ -33,6 +33,7 @@ class orders_data
         return $t_data;
     }
 }
+
 class orders
 {
     var       $name               = 'Механизм заказов';
@@ -227,6 +228,7 @@ class orders
         $valid = true;
 
         if ( ! empty($data)) {
+
             foreach ($data as $val) {
 
                 $str = trim(strip_tags($val['value']));
@@ -246,8 +248,25 @@ class orders
                         }
                         break;
 
+                    case 'email':
+
+                        if ( ! $str = filter_var($str, FILTER_VALIDATE_EMAIL)) {
+
+                            $valid = false;
+                        }
+                        break;
+
                     case 'phone':
-                        if ( ! ctype_digit($str)) {
+
+                        $valid = ! ! preg_match('/^\+{0,1}[(]{0,1}[0-9]{1,4}[)]{0,1}[- 0-9]+$/sim', $str);
+                        break;
+
+                    case 'integer':
+                        if (is_bool($str)) {
+                            $str = 0;
+                        }
+                        $str = (int) $str;
+                        if (0 >= $str) {
                             $valid = false;
                         }
                         break;
@@ -354,4 +373,5 @@ class orders
         return $result_array;
     }
 }
+
 ?>

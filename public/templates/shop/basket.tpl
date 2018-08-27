@@ -128,20 +128,57 @@ catch(e) {
 			</div>
 			
 			<div class="submit">
-				<label for="nm" style="clear: both;">Контактное лицо</label>
-				<input type="text" id="nm" name="nm" class="require" />
-				
-				<label for="umail">Контактный Email<br />
+
+                <label for="fio" style="clear: both;">Ф.И.О.</label>
+                <input type="text" id="fio" name="fio" class="require" required />
+
+                <label for="umail" style="clear: both;">Контактный Email<br />
 				<span style="color:red">Если у вас почтовый ящик на <b>MAIL.RU</b>, возможна "недоставка письма".<br />В этом случае письмо с подробностями заказа будет отправлено вам непосредственно администратором сайта.</span>
 				</label>
-				<input type="text" id="umail" name="umail" class="require" />
-				
-				<img id="captcha" src="/vc/CaptchaSecurityImages.php?v={$img}" />
-				<label for="cptch">Код на картинке</label>
-				<input type="text" name="s_code" id="cptch" value="" class="require" />
-				
-				<label for="comm">Укажите пожалуйста:<br/>Ф.И.О., Адрес, Индекс, Способ оплаты (WebMoney, Qiwi, Яндекс)</label>
+				<input type="text" id="umail" name="umail" class="require" required />
+
+                <label for="phone" style="clear: both;">Телефон</label>
+                <input type="text" id="phone" name="phone" class="require" required />
+
+                <label for="country" style="clear: both;">Страна</label>
+                <input type="text" id="country" name="country" class="require" required />
+
+                <label for="city" style="clear: both;">Город / населенный пункт</label>
+                <input type="text" id="city" name="city" class="require" required />
+
+                <label for="region" style="clear: both;">Область / район</label>
+                <input type="text" id="region" name="region" class="require" required />
+
+                <label for="address" style="clear: both;">Адрес (улица, дом, квартира)</label>
+                <input type="text" id="address" name="address" class="require" required />
+
+                <label for="postcode" style="clear: both;">Почтовый индекс</label>
+                <input type="text" id="postcode" name="postcode" class="require" required />
+
+                <label for="shiping_type" style="clear: both;">Способо доставки</label>
+                <select name="shiping_type" id="shiping_type" required>
+                    <option></option>
+                    <option value="1">Почта</option>
+                    <option value="2">ЕМС</option>
+                    <option value="3">Транспортная компания</option>
+                </select>
+
+                <label for="billing_type" style="clear: both;">Способо оплаты</label>
+                <select name="billing_type" id="billing_type" required>
+                    <option></option>
+                    <option value="1">WebMoney</option>
+                    <option value="2">Qiwi</option>
+                    <option value="3">Яндекс деньги</option>
+                    <option value="4">Перевод на карту</option>
+                </select>
+
+				<label for="comm">Примечания</label>
 				<textarea id="comm" name="comm"></textarea>
+
+                <img id="captcha" src="/vc/CaptchaSecurityImages.php?v={$img}" />
+                <label for="cptch">Код на картинке</label>
+                <input type="text" name="s_code" id="cptch" value="" class="require" />
+
 				<div class="o_mess">&nbsp;</div>
 				<input class="order" type="submit" name="order" value="" id="submt" />
 			</div>

@@ -123,7 +123,7 @@ if (isset($_POST['order'])) {
     require_once('swift/swift_required.php');
     $orders->load_settings();
 
-    $response         = '';
+    $response         = new stdClass();
     $response->err    = '';
     $response->act    = 'order';
     $response->mailed = '';
@@ -134,17 +134,84 @@ if (isset($_POST['order'])) {
         $response->code = 1;
     }
 
-    $posted_name    = trim(strip_tags($_POST['nm']));
-    $posted_umail   = $_POST['umail'];
-    $posted_comment = trim(strip_tags($_POST['comm']));
-
-    $validate = array(
-        array('value' => $posted_name),
+    $required = array(
+        'fio'          => 'string',
+        'umail'        => 'email',
+        'phone'        => 'phone',
+        'country'      => 'string',
+        'city'         => 'string',
+        'region'       => 'string',
+        'address'      => 'string',
+        'postcode'     => 'integer',
+        'shiping_type' => 'integer',
+        'billing_type' => 'integer',
     );
+
+    $dictionary = array(
+        'fio'          => 'Ф.И.О.',
+        'umail'        => 'Email',
+        'phone'        => 'Телефон',
+        'country'      => 'Страна',
+        'city'         => 'Город',
+        'region'       => 'Область',
+        'address'      => 'Адрес',
+        'postcode'     => 'Индекс',
+        'shiping_type' => 'Доставка',
+        'billing_type' => 'Оплата',
+        'comm'         => 'Примечания',
+    );
+
+    $shiping = array(
+        1 => 'Почта',
+        2 => 'ЕМС',
+        3 => 'Транспортная компания',
+    );
+
+    $billing = array(
+        1 => 'WebMoney',
+        2 => 'Qiwi',
+        3 => 'Яндекс деньги',
+        4 => 'Перевод на карту',
+    );
+
+
+    $data = array();
+
+    $validate = array();
+
+    foreach ($_POST as $pkey => $pval) {
+
+        if ( ! isset($dictionary[$pkey])) {
+            continue;
+        }
+
+        $data[$pkey] = trim(strip_tags($pval));
+
+        if (isset($required[$pkey])) {
+
+            $validate[] = array(
+                'value' => $pval,
+                'type'  => $required[$pkey],
+            );
+        }
+    }
 
     if ($orders->validate_post_order($validate) !== true) {
         $response->fields = 1;
     }
+
+    $data['shiping_type'] = (int) $data['shiping_type'];
+    $data['billing_type'] = (int) $data['billing_type'];
+
+    if ( ! isset($shiping[$data['shiping_type']]) || ! isset($billing[$data['billing_type']])) {
+        $response->fields = 1;
+    }
+
+    $data['shiping_type'] = $shiping[$data['shiping_type']];
+    $data['billing_type'] = $billing[$data['billing_type']];
+
+    $posted_name  = $data['fio'];
+    $posted_umail = $data['umail'];
 
     try {
         Swift_Message::newInstance()->setTo(array($posted_umail => $posted_name));
@@ -157,17 +224,20 @@ if (isset($_POST['order'])) {
     $order_string = false;
     if ($response->fields == '' AND $response->code == '') {
 
-        $order_elem   = array();
-        $order_elem[] = array('label' => 'Контактное лицо:', 'value' => $posted_name);
-        $order_elem[] = array('label' => 'Email:', 'value' => $posted_umail);
-        //$order_elem[] = array('label'=>'Контактный телефон:','value'=>$_POST['ph']);
-        $order_elem[] = array('label' => 'Комментарии:', 'value' => $posted_comment);
+        $order_elem = array();
+        foreach ($data as $pkey => $pval) {
+
+            $order_elem[] = array(
+                'label' => isset($dictionary[$pkey]) ? $dictionary[$pkey] : $pkey,
+                'value' => $pval,
+            );
+        }
 
         try {
 
             $posted_items = $orders->recalc_basket($gallery, $_POST);
 
-            $order_elem[] = array('label' => 'Детали заказа:', 'value' => '&nbsp;');
+            $order_elem[] = array('label' => 'Детали заказа', 'value' => '&nbsp;');
 
             $order_details = array();
             foreach ($posted_items['html_items'] as $val) {

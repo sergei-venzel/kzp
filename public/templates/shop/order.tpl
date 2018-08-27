@@ -22,7 +22,7 @@ table.order {
 <div class="m_order">
 {if $list.customer}
 {foreach from=$list.customer item=customer}
-<p>{$customer.label} <b>{$customer.value}</b></p>
+<p>{$customer.label}: <b>{$customer.value}</b></p>
 {/foreach}
 {/if}
 <table class="order">
