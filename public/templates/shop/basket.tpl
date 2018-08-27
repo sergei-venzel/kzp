@@ -155,7 +155,7 @@ catch(e) {
                 <label for="postcode" style="clear: both;">Почтовый индекс</label>
                 <input type="text" id="postcode" name="postcode" class="require" required />
 
-                <label for="shiping_type" style="clear: both;">Способо доставки</label>
+                <label for="shiping_type" style="clear: both;">Способ доставки</label>
                 <select name="shiping_type" id="shiping_type" required>
                     <option></option>
                     <option value="1">Почта</option>
@@ -163,7 +163,7 @@ catch(e) {
                     <option value="3">Транспортная компания</option>
                 </select>
 
-                <label for="billing_type" style="clear: both;">Способо оплаты</label>
+                <label for="billing_type" style="clear: both;">Способ оплаты</label>
                 <select name="billing_type" id="billing_type" required>
                     <option></option>
                     <option value="1">WebMoney</option>
