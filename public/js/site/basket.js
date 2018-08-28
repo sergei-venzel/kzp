@@ -3,7 +3,7 @@ $('div.inbasket').click(function() {
 	obj = $(this);
 	var id = parseInt(obj.attr('id').replace(/^com_/,''));
 	obj.css('display','none');
-	var uw = u_wait(obj.parents('div.spec'),'Добавление<br />в&nbsp;корзину...','prepend');
+	var uw = u_wait(obj.parents('div.card'),'Добавление<br />в&nbsp;корзину...','prepend');
 	$.getJSON(
 		r_uri,
 		{add_to_basket:id},
@@ -13,7 +13,7 @@ $('div.inbasket').click(function() {
 			obj.css('display','block');
 			if(json.err == '') {
 				
-				var sw = message_pane(obj.parents('div.spec'),'<p>Товар добавлен в корзину</p><p><a href="'+basket_page+'">оформление заказа</a></p>','bsk','prepend');
+				var sw = message_pane(obj.parents('div.card'),'<p>Товар добавлен в корзину</p><p><a href="'+basket_page+'">оформление заказа</a></p>','bsk','prepend',{offTop:50,offLeft:2});
 				$('#b_q b').text(json.items);
 				$('#b_s b').text(json.total);
 				// setTimeout(close_bal,10000);

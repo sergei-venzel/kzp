@@ -158,7 +158,7 @@ catch(e) {
                 <label for="shiping_type" style="clear: both;">Способ доставки</label>
                 <select name="shiping_type" id="shiping_type" required>
                     <option></option>
-                    <option value="1">Почта</option>
+                    <option value="1">Почта (1 класс)</option>
                     <option value="2">ЕМС</option>
                     <option value="3">Транспортная компания</option>
                 </select>

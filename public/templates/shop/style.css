@@ -544,6 +544,10 @@ div.clearfix {
     width: 48%;
 }
 
+.catalog-page .card .fict {
+    width:100%;
+}
+
 div.card-title {
 	background-color: #D0DBD2;
 	height:56px;
@@ -944,10 +948,16 @@ div.su_mess {
 	top:10px;
 	left:10px;
 	position: absolute;
+    z-index:100;
 }
 
 .su_mess a {
     text-decoration:underline;
+}
+
+.catalog-page .card .su_mess {
+    width:calc(100% - 4px);
+    margin:auto;
 }
 
 span.close {
@@ -956,11 +966,11 @@ span.close {
     color:#fff;
 	position:relative;
 	cursor:pointer;
-	font-size: 16px;
-	line-height: 18px;
+	font-size: 28px;
+	line-height: 30px;
     text-align:center;
-	height:18px;
-	width:18px;
+	height:30px;
+	width:30px;
     overflow:hidden;
     border-radius:50%;
     -webkit-border-radius:50%;
@@ -1599,7 +1609,8 @@ table.full {
         margin: 0 0 4px 0;
     }
 
-    .submit input, .submit textarea {
+    .submit input, .submit textarea, .submit select
+    {
         margin: 0 0 14px 0;
         width: calc(100% - 2px);
         box-sizing: border-box;
