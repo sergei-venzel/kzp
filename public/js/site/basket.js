@@ -1,6 +1,6 @@
-$('div.inbasket').click(function() {
+$('div.inbasket').on('click', function() {
 	
-	obj = $(this);
+	var obj = $(this);
 	var id = parseInt(obj.attr('id').replace(/^com_/,''));
 	obj.css('display','none');
 	var uw = u_wait(obj.parents('div.card'),'Добавление<br />в&nbsp;корзину...','prepend');
