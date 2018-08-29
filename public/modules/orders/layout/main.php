@@ -79,7 +79,7 @@ if (isset($_GET['remove_from_basket']) AND $basket_active !== false) {
  */
 if (isset($_POST['recalc'])) {
 
-    $response      = '';
+    $response      = new stdClass();
     $response->err = '';
     $response->act = 'recalc';
 

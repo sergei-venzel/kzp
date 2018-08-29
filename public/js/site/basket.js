@@ -16,7 +16,7 @@ $('div.inbasket').click(function() {
 				var sw = message_pane(obj.parents('div.card'),'<p>Товар добавлен в корзину</p><p><a href="'+basket_page+'">оформление заказа</a></p>','bsk','prepend',{offTop:50,offLeft:2});
 				$('#b_q b').text(json.items);
 				$('#b_s b').text(json.total);
-				// setTimeout(close_bal,10000);
+				setTimeout(close_bal,10000);
 			}
 		}
 	);
@@ -68,12 +68,18 @@ $('#elements span.remove').click(function() {
 	
 });
 
+$('input[name="recalc"]', '#basket_order').on('click', function(e) {
+
+    var $form = $(this).parents('form');
+    $('.require', $form).prop('disabled', true);
+});
+
 $('#basket_order').ajaxForm(
 	{
 		url:$('#basket_order').attr('action'),
 		type:'post',
 		dataType:'json',
-		beforeSubmit:preAct,
+        beforeSubmit:preAct,
 		success:vld
 	}
 );
@@ -86,9 +92,9 @@ function preAct(formData, jqForm, options) {
  		if(formData[i].name === 'recalc')
  			act = 'recalc';
  	}
- 	
+
  	if(act === 'order') {
- 		
+
  		$('input#submt').attr('disabled',true).css({cursor:'wait',backgroundPosition:'left -22px'});
  	}
  	else {
@@ -99,13 +105,14 @@ function preAct(formData, jqForm, options) {
     return true; 
 }
 
-function vld(json) {
+function vld(json, statusText, xhr, $form) {
 	
 	if(json.err === '') {
-		
-		if(json.act === 'recalc') {
-			
-			$('input#recalc').attr('disabled',false).css({cursor:'pointer',backgroundPosition:'left top'});
+
+	    if(json.act === 'recalc') {
+
+            $('.require', $form).prop('disabled', false);
+	        $('input#recalc').attr('disabled',false).css({cursor:'pointer',backgroundPosition:'left top'});
 			$('#b_q b').text(json.items);
 			$('#b_s b').text(json.total);
 			$('span#final').text(json.total);
@@ -129,8 +136,9 @@ function vld(json) {
 			}
 			
 			var cnt = $('div#elements div#item').length;
-			if(cnt == 0)
-				$('div#elements').html('<p>Ваша корзина пуста.</p><p>Для выбора товара, перейдите в каталог товаров.</p>');
+			if(cnt == 0) {
+                $('div#elements').html('<p>Ваша корзина пуста.</p><p>Для выбора товара, перейдите в каталог товаров.</p>');
+            }
 		}
 		else {
 			
