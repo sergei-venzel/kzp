@@ -160,7 +160,7 @@ catch(e) {
                     <option></option>
                     <option value="1">Почта (1 класс)</option>
                     <option value="2">ЕМС</option>
-                    <option value="3">Транспортная компания</option>
+                    {*<option value="3">Транспортная компания</option>*}
                 </select>
 
                 <label for="billing_type" style="clear: both;">Способ оплаты</label>
