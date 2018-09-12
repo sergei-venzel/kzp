@@ -819,7 +819,13 @@ div.content {
 
 .content ul li {
 	list-style-type: disc;
+    line-height:20px;
 }
+
+.content fieldset ul li {
+    list-style-type: none;
+}
+
 .content ol li {
 	list-style-type: decimal;
 }
@@ -1306,6 +1312,7 @@ table.full {
 .header-titles {
     padding:10px 0 0 0;
     width:470px;
+    max-width:100%;
     float:left;
 }
 

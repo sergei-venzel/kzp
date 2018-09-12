@@ -6,7 +6,7 @@
 <meta name="description" content="{$header_data.description}" />
 <meta name="keywords" content="{$header_data.keywords}" />
 <title>{$header_data.title}</title>
-<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.6.1" />
+<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.6.3" />
 <!--[if IE 6]> <link href="{$theme_path}/style_ie6.css" rel="stylesheet" type="text/css"> <![endif]-->
 <link rel="stylesheet" type="text/css" href="{$theme_path}/highslide.css" />
 <link rel="stylesheet" type="text/css" media="print" href="{$theme_path}/print.css" />
@@ -56,7 +56,7 @@ $.getScript('/js/site/common.js');
         <div class="left_top_block">
             <a href="/" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине"><img src="{$theme_path}/images/logo.gif" alt="logo" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине" /></a>
         </div>
-        <div class="boxed header-titles">
+        <div class="boxed header-titles" style="max-width:100%;">
             <div class="site-title boxed">Kachay-Zhelezo.biz</div>
             <h2 class="site-title-2 boxed">ИНТЕРНЕТ-МАГАЗИН СТЕРОИДОВ</h2>
         </div>
