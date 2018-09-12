@@ -1,6 +1,10 @@
 AddDefaultCharset UTF-8
 php_flag short_open_tag on
 
+<Files index.php>
+Header append Cache-Control "public,max-age=0,must-revalidate"
+</Files>
+
 #Options -Indexes
 #RequestHeader unset Range
 #RequestHeader unset Request-Range
