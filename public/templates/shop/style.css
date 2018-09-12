@@ -824,6 +824,7 @@ div.content {
 
 .content fieldset ul li {
     list-style-type: none;
+    margin:4px 0;
 }
 
 .content ol li {
