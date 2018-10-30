@@ -6,7 +6,7 @@
 <meta name="description" content="{$header_data.description}" />
 <meta name="keywords" content="{$header_data.keywords}" />
 <title>{$header_data.title}</title>
-<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.6.3" />
+<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.6.4" />
 <!--[if IE 6]> <link href="{$theme_path}/style_ie6.css" rel="stylesheet" type="text/css"> <![endif]-->
 <link rel="stylesheet" type="text/css" href="{$theme_path}/highslide.css" />
 <link rel="stylesheet" type="text/css" media="print" href="{$theme_path}/print.css" />
@@ -57,7 +57,7 @@ $.getScript('/js/site/common.js');
             <a href="/" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине"><img src="{$theme_path}/images/logo.gif" alt="logo" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине" /></a>
         </div>
         <div class="boxed header-titles" style="max-width:100%;">
-            <div class="site-title boxed">Kachay-Zhelezo.biz</div>
+            <div class="site-title boxed"><a href="/" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине">Kachay-Zhelezo.biz</a></div>
             <h2 class="site-title-2 boxed">ИНТЕРНЕТ-МАГАЗИН СТЕРОИДОВ</h2>
         </div>
         <div class="right_top_block">
@@ -86,7 +86,8 @@ $.getScript('/js/site/common.js');
     
     
    {if $top_pages}
-    <div class="menu corner-all boxed">
+       <span class="menu-expander boxed" id="main-menu-toggler"></span>
+    <div id="main-navigation" class="menu corner-all boxed">
         <div class="middle_block_menu boxed">
             {common_list data=$top_pages class="main_menu" flag=$top_active active=""}
         {*{html_table_high_level loop=$top_pages rows=1 table_attr='' end_td_class='border_img_none'}*}
@@ -98,6 +99,41 @@ $.getScript('/js/site/common.js');
     
 </div>
 
+{literal}
+    <script>
+        jQuery(document).ready(function($) {
+
+            $('#main-navigation, .left_block').on('collapse', function(e) {
+                $(this).removeClass('expanded');
+            });
+
+            $('#main-menu-toggler').on('click', function(e) {
+
+                var obj = $(this), elm = $('#main-navigation');
+                $('.left_block').trigger('collapse');
+                elm.toggleClass('expanded');
+            });
+
+            $('.left_block').on('init', function(e) {
+
+                var need = $('.cat-menu').length + $('.news-sections').length;
+
+                if(need) {
+
+                    var zone = $(this);
+                    var btn = $('<span class="menu-expander alter boxed" id="#left-nav-toggler"></span>').css('top','50px');
+                    zone.before(btn);
+                    btn.on('click', function(e) {
+
+                        $('#main-navigation').trigger('collapse');
+                        zone.toggleClass('expanded');
+                    });
+                }
+
+            }).trigger('init');
+        });
+    </script>
+{/literal}
 
 
 {*{debug}*}
