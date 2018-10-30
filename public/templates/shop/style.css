@@ -1487,6 +1487,10 @@ table.full {
 
 @media screen and (max-width: 600px) {
 
+    .search_box {
+        width: 180px;
+    }
+
     .u-left-zone {
         display:none;
     }
@@ -1516,14 +1520,14 @@ table.full {
     }
 
     .menu-expander.alter {
-        border-left: 10px solid #ddd;
-        border-right: 10px solid #ddd;
+        border-left: 10px solid #fe2525;
+        border-right: 10px solid #fe2525;
         border-top:none;
         border-bottom:none;
     }
 
     .menu-expander.alter:before {
-        background-color:#ddd;
+        background-color:#fe2525;
         width:10px;
         height:100%;
         position:absolute;
