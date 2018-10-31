@@ -6,7 +6,7 @@
 <meta name="description" content="{$header_data.description}" />
 <meta name="keywords" content="{$header_data.keywords}" />
 <title>{$header_data.title}</title>
-<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.6.5" />
+<link rel="stylesheet" type="text/css" href="{$theme_path}/style.css?v=1.6.6" />
 <!--[if IE 6]> <link href="{$theme_path}/style_ie6.css" rel="stylesheet" type="text/css"> <![endif]-->
 <link rel="stylesheet" type="text/css" href="{$theme_path}/highslide.css" />
 <link rel="stylesheet" type="text/css" media="print" href="{$theme_path}/print.css" />
@@ -109,9 +109,11 @@ $.getScript('/js/site/common.js');
 
             $('#main-menu-toggler').on('click', function(e) {
 
-                var obj = $(this), elm = $('#main-navigation');
-                $('.left_block').trigger('collapse');
+                var elm = $('#main-navigation');
                 elm.toggleClass('expanded');
+                if(elm.hasClass('expanded')) {
+                    $(document).scrollTop(0);
+                }
             });
 
             $('.left_block').on('init', function(e) {
@@ -121,6 +123,7 @@ $.getScript('/js/site/common.js');
                 if(need) {
 
                     var zone = $(this);
+
                     var btn = $('<span class="menu-expander alter boxed" id="#left-nav-toggler"></span>').css('top','50px');
                     zone.before(btn);
                     btn.on('click', function(e) {
@@ -130,7 +133,32 @@ $.getScript('/js/site/common.js');
                     });
                 }
 
-            }).trigger('init');
+            });
+
+            $(window).on('resize', function() {
+
+                var pageCont = $('.main'),
+                    subM = $('.left_block', pageCont),
+                    mainNavCont = $('#main-navigation'),
+                    subInMain = $('.left_block', mainNavCont),
+                    pos = mainNavCont.css('position').toString().toLowerCase() === 'absolute';
+
+                var moveToMain = !subInMain.length && subM.length && pos, moveToPlace = !moveToMain;
+
+                if($(this).width() <= 600) {
+
+                    if(moveToMain) {
+
+                        mainNavCont.append(subM);
+                    }
+                }
+                else {
+
+                    if(moveToPlace) {
+                        pageCont.prepend(subInMain);
+                    }
+                }
+            }).trigger('resize');
         });
     </script>
 {/literal}
