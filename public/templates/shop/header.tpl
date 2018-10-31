@@ -103,10 +103,6 @@ $.getScript('/js/site/common.js');
     <script>
         jQuery(document).ready(function($) {
 
-            $('#main-navigation, .left_block').on('collapse', function(e) {
-                $(this).removeClass('expanded');
-            });
-
             $('#main-menu-toggler').on('click', function(e) {
 
                 var elm = $('#main-navigation');
@@ -114,25 +110,6 @@ $.getScript('/js/site/common.js');
                 if(elm.hasClass('expanded')) {
                     $(document).scrollTop(0);
                 }
-            });
-
-            $('.left_block').on('init', function(e) {
-
-                var need = $('.cat-menu').length + $('.news-sections').length;
-
-                if(need) {
-
-                    var zone = $(this);
-
-                    var btn = $('<span class="menu-expander alter boxed" id="#left-nav-toggler"></span>').css('top','50px');
-                    zone.before(btn);
-                    btn.on('click', function(e) {
-
-                        $('#main-navigation').trigger('collapse');
-                        zone.toggleClass('expanded');
-                    });
-                }
-
             });
 
             $(window).on('resize', function() {
