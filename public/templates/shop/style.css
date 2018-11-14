@@ -1,6 +1,3 @@
-/*
-version 1.2.3
-*/
 html, div, table, td, img, p, form, ul, li {
     padding: 0 0 0 0;
     margin: 0 0 0 0;
@@ -91,8 +88,6 @@ table td {
 }
 
 
-/*-----------------------------------------------------------------------*/
-
 div.fix_main {
     width: 98%;
     margin: 0 auto;
@@ -117,7 +112,6 @@ a.logo:hover {
     text-decoration: none;
 }
 
-/*----------------------------TOP MENU-------------------------------------------*/
 
 .menu-expander { display:none; }
 
@@ -143,7 +137,6 @@ div.top_menu {
 }
 
 .top_menu li:first-child {
-    /*border: 1px solid #c6c6c6;*/
     font-size: 110%;
     padding: 4px 8px 4px 8px;
     margin-left: 30px;
@@ -151,7 +144,7 @@ div.top_menu {
 }
 
 .top_menu li:first-child:hover {
-    /*background-color: #D0DBD2;*/
+
 }
 
 .top_menu li a,
@@ -172,7 +165,7 @@ div.top_menu {
 .left_top_block {
     float: left;
     width: 100px;
-    /*height: 66px;*/
+
     overflow: hidden;
     padding: 7px 0 0 0;
     position: relative;
@@ -182,8 +175,6 @@ div.top_menu {
     float: right;
 }
 
-/*----------------------------TOP MENU END-------------------------------------------*/
-/*----------------------------SEARCH-------------------------------------------*/
 
 div.search_block {
     padding: 10px 0 0 0;
@@ -216,9 +207,6 @@ div.search_block form {
     cursor: pointer;
 }
 
-/*----------------------------SEARCH END-------------------------------------------*/
-
-/*-----------------------------MENU------------------------------------------*/
 
 .menu {
     padding: 4px 0;
@@ -226,18 +214,7 @@ div.search_block form {
 }
 
 .menu {
-	/*background: url(images/bg_left.gif) repeat-x left top;*/
 
-    /*background: rgb(244,244,244);*/
-    /*background: -moz-linear-gradient(top,  rgb(244,244,244) 0%, rgb(182,196,183) 100%);*/
-    /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(244,244,244)), color-stop(100%,rgb(182,196,183)));*/
-    /*background: -webkit-linear-gradient(top,  rgb(244,244,244) 0%,rgb(182,196,183) 100%);*/
-    /*background: -o-linear-gradient(top,  rgb(244,244,244) 0%,rgb(182,196,183) 100%);*/
-    /*background: -ms-linear-gradient(top,  rgb(244,244,244) 0%,rgb(182,196,183) 100%);*/
-    /*background: linear-gradient(to bottom,  rgb(244,244,244) 0%,rgb(182,196,183) 100%);*/
-    /*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#b6c4b7',GradientType=0 );*/
-
-    /*border: 1px solid #ccc;*/
     background-color:#09090a;
 }
 
@@ -281,17 +258,14 @@ div.search_block form {
 }
 
 .top_block_menu {
-    /*background: transparent url("images/bg_top_menu.gif") no-repeat left bottom;*/
     height: 8px;
 }
 
 .bottom_block_menu {
-    /*background: transparent url("images/bg_bottom_menu.gif") no-repeat left top;*/
     height: 11px;
 }
 
 .middle_block_menu {
-    /*background: transparent url("images/bg_menu.gif") repeat-x left top;*/
     height: 33px;
     margin: 0 1px;
     padding: 0 10px 0 10px;
@@ -332,14 +306,6 @@ div.search_block form {
     text-decoration: underline;
 }
 
-/*-----------------------------MENU END------------------------------------------*/
-
-
-
-
-/*-----------------------------------------------------------------------*/
-
-/*-----------------------------MAIN------------------------------------------*/
 
 .main {
     position:relative;
@@ -372,11 +338,6 @@ div.shift{
 }
 
 
-/*-----------------------------MAIN END------------------------------------------*/
-
-
-/*-----------------------------ARROW------------------------------------------*/
-
 ul.arrow {
     padding-top: 8px;
     padding-bottom: 16px;
@@ -384,7 +345,6 @@ ul.arrow {
 
 .arrow li {
     background-color: #ddd;
-    /*background: url("images/arrow.gif") no-repeat left top;*/
     padding: 6px 6px 8px 3%;
     box-sizing:border-box;
     -webkit-box-sizing:border-box;
@@ -409,7 +369,6 @@ ul.arrow {
 .arrow a:visited {
 
     text-decoration:none;
-    /*font-weight:bold;*/
 }
 
 .arrow a {
@@ -430,18 +389,12 @@ li.current ul a:visited
     text-decoration: none;
 }
 
-.arrow li:first-child a,
-.arrow li:first-child a:visited/*,
-.arrow li:last-child a,
-.arrow li:last-child a:visited*/
+.arrow li:first-child a
 {
     color:#1D34A6;
 }
 
-.arrow li:nth-of-type(2) a,
-.arrow li:nth-of-type(2) a:visited/*,
-.arrow li:last-child a,
-.arrow li:last-child a:visited*/
+.arrow li:nth-of-type(2) a
 {
     color:#f00;
 }
@@ -479,7 +432,9 @@ li.current {
 }
 
 li.current a,
-li.current a:hover
+li.current a:hover,
+.arrow li.current:nth-of-type(2) a,
+.arrow li.current:first-child a
 {
 	color:#f3f3f3;
 }
@@ -526,10 +481,6 @@ a.all {
 	color: #3c3c3c;
 }
 
-/*-----------------------------ARROW END------------------------------------------*/
-
-
-			/*  CATALOG  */
 			
 h1.catalog {
 	text-align: center;
@@ -540,9 +491,6 @@ h2.catalog {
 }
 
 div.page-list {
-	/*border-width: 1px 0;
-	border-style: solid none none none;
-	border-color: #7C7C7C transparent transparent transparent;*/
 	margin: 0 0 2px 0;
 	padding: 6px 0;
 	text-align: left;
@@ -564,7 +512,6 @@ p.exclam {
 }
 
 div.clearfix {
-	/*float:left;*/
 	font-size: 0;
 	line-height: 0;
 	clear:both;
@@ -578,7 +525,6 @@ div.clearfix {
 	margin: 0 0 5px 5px;
 	height:238px;
 	overflow: hidden;
-	/*width:314px;*/
     max-width: 56%;
     width: 56%;
 }
@@ -680,7 +626,7 @@ div.spec {
 }
 
 div.preview:empty + div.spec {
-    /*width:auto;*/
+
 }
 
 .spec div.details {
@@ -717,7 +663,7 @@ div.preview:empty + div.spec {
 }
 
 .spec div.inbasket:before {
-    /*content: 'в корзину \00BB';*/
+
 }
 
 .spec div.cost {
@@ -728,7 +674,6 @@ div.preview:empty + div.spec {
 
 .cost span {
 	color:#E9337C;
-	/*display: block;*/
 	font-weight: bold;
 }
 
@@ -738,10 +683,6 @@ div.preview:empty + div.spec {
     font-weight:normal;
 }
 			
-			/*  CATALOG  */
-
-
-/*-----------------------------TOP IMG------------------------------------------*/
 div.top_img {
 
 }
@@ -754,13 +695,8 @@ div.top_img {
 
 .top_img img {
     width: 100%;
-    /*float: right;*/
 }
-/*-----------------------------TOP IMG END------------------------------------------*/
 
-
-
-/*-----------------------------NEWS-----------------------------------------*/
 
 div.date {
     text-align: right;
@@ -771,9 +707,6 @@ div.listing {
     text-align: right;
 }
 
-/*-----------------------------NEWS END------------------------------------------*/
-
-/*------------------------------CATALOG-----------------------------------------*/
 
 div.catalog {
 
@@ -782,7 +715,6 @@ div.catalog {
 div.one_item {
     width: 332px;
     float: left;
-/*    padding: 0 0 0 0;*/
 }
 
 div.img_one_item {
@@ -839,14 +771,9 @@ div.text_one_item {
 }
 
 h1.page_name {
-/*    padding-left: 22px;*/
 }
 
 
-
-/*------------------------------CATALOG END-----------------------------------------*/
-
-/*------------------------------CONTENT-----------------------------------------*/
 div.content {
     padding-bottom: 20px;
     
@@ -855,7 +782,6 @@ div.content {
 .content p {
     margin: 0 0 8px 0;
     padding: 0 0 10px 0;
-	/*text-indent: 10px;*/
 }
 
 .content h2,
@@ -887,9 +813,7 @@ div.content {
 .content ol li {
 	list-style-type: decimal;
 }
-/*------------------------------CONTENT END-----------------------------------------*/
 
-/*------------------------------ITEM-----------------------------------------*/
 div.gallery_item {
     width: 300px;
     float: left;
@@ -912,11 +836,6 @@ div.small_item {
     cursor: pointer;
     float: left;
 }
-
-/*------------------------------ITEM END-----------------------------------------*/
-
-
-/*-------------------------------ORDER----------------------------------------*/
 
 table.order_form {
     border: none;
@@ -944,10 +863,7 @@ input.text {
     margin-top: 3px;
 }
 
-/*-------------------------------ORDER END----------------------------------------*/
 
-
-/*--------------------------------PRICE---------------------------------------*/
 a.price,
 a.price:hover,
 a.price:visited {
@@ -955,10 +871,6 @@ a.price:visited {
     color: #3C3C3C;
 }
 
-
-/*--------------------------------PRICE END---------------------------------------*/
-
-/*-----------------------------FOOTER------------------------------------------*/
 
 div.footer{
     background-color:#09090a;
@@ -974,7 +886,6 @@ div.footer{
     display: inline;
     padding: 0 14px;
     font-size:14px;
-    /*border-right: 1px solid #3C3C3C;*/
 }
 
 .footer li a,
@@ -993,8 +904,6 @@ div.u_wait {
 	border: 1px solid #475547;
 	font-size: 10px;
 	line-height: normal;
-	/*height: 70px;
-	width:70px;*/
 	padding: 10px;
 	top:10px;
 	left:10px;
@@ -1007,7 +916,6 @@ div.su_mess {
 	color:#475547;
 	font-size: 18px;
 	line-height: 20px;
-	/*height: 40px;*/
 	width:280px;
 	padding: 5px;
 	top:10px;
@@ -1057,8 +965,6 @@ div.fict {
 }
 
 
-			/*  BASKET  */
-			
 div.basket-page {
 	float:left;
 	clear:left;
@@ -1198,10 +1104,7 @@ div.recalc {
 }
 
 div.submit {
-	/*clear:both;*/
-	/*float:left;*/
 	padding: 20px 0 25px 0;
-	/*width:60%;*/
     margin: 0 auto;
 }
 
@@ -1259,10 +1162,6 @@ div.o_mess {
 	width:92px;
 }
 			
-			/*  BASKET  */
-
-
-/*-----------------------------FOOTER END------------------------------------------*/
 
 .hidden {
     overflow: hidden;
@@ -1323,9 +1222,7 @@ table.full {
 
 .clear:after {
     content: '';
-    /* clear: both; */
     width: 100%;
-    /* float: left; */
     display: table;
 }
 
@@ -1376,7 +1273,6 @@ table.full {
 }
 
 .site-title {
-	/*text-align:center;*/
 	color:#09090a;
 	font-size:22px;
 	line-height:22px;
@@ -1388,9 +1284,7 @@ table.full {
 }
 
 .site-title-2 {
-    /*text-align: center;*/
     color:#09090a;
-    /*background-color: #008000;*/
     padding: 0;
     font-size:14px;
     line-height:14px;
@@ -1401,7 +1295,6 @@ table.full {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    /*border: 1px solid #BAC7BA;*/
     background-color:#ddd;
     padding: 8px 8px 8px 27px;
     margin-left: -14px;
@@ -1626,12 +1519,7 @@ table.full {
     }
 
     .left_block {
-        /*position:absolute;*/
         padding: 0;
-        /*z-index:999;*/
-        /*top:0;*/
-        /*left:-100%;*/
-        /*transition: all .5s;*/
         width: 100%;
     }
 
@@ -1658,11 +1546,9 @@ table.full {
 
     .arrow li {
         background-image: none;
-        /*padding-left: 1px;*/
     }
 
     .arrow li:nth-child(odd) {
-        /*background-color: #f8f8f8;*/
     }
 
     .arrow a, .arrow a:visited, li.current ul a, li.current ul a:visited {
@@ -1670,8 +1556,6 @@ table.full {
     }
 
     .arrow a, .arrow a:hover, .arrow a:visited {
-        /*font-size: 12px;*/
-        /*line-height: 16px;*/
     }
 
     .showcase-item {
@@ -1683,7 +1567,6 @@ table.full {
 
     .card {
         border: 1px solid #475547;
-        /*float: none;*/
         margin: 0 0 5px 0;
         height: 275px;
         overflow: hidden;
@@ -1823,7 +1706,6 @@ table.full {
     }
 
     .right_top_block {
-        /*position: absolute;*/
         top: 50px;
         left: 0;
     }
