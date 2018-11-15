@@ -12,10 +12,32 @@
 				<p id="b_q">Выбрано товаров: <b>{$basket_items}</b></p>
 				<p id="b_s">На сумму: <b>{$basket_sum}</b></p>
 			</div>
-            
-            {if $catalog_menu}
-			{html_list_top_menu data=$catalog_menu class='arrow cat-menu'}
+
+			{if $sections_navigation}
+				{if $sections_navigation.grouped}
+					{foreach from=$sections_navigation.grouped item=sectGroup}
+						<div class="boxed clear section-item {if $sectGroup.expanded}current{/if}">
+							<h3>{$sectGroup.section}</h3>
+							<ul class="arrow cat-menu">
+								{foreach from=$sectGroup.items item=sectionCategory}
+									<li class="{if $sectionCategory.current}current{/if}"><a href="/?{$sectionCategory.link}">{$sectionCategory.p_name}</a></li>
+								{/foreach}
+							</ul>
+						</div>
+					{/foreach}
+				{/if}
+				{if $sections_navigation.alone}
+					<ul class="arrow cat-menu">
+						{foreach from=$sections_navigation.alone item=sectionCategory}
+							<li class="{if $sectionCategory.current}current{/if}"><a href="/?{$sectionCategory.link}">{$sectionCategory.p_name}</a></li>
+						{/foreach}
+					</ul>
+				{/if}
 			{/if}
+
+            {*{if $catalog_menu}
+			{html_list_top_menu data=$catalog_menu class='arrow cat-menu'}
+			{/if}*}
 			
 			{if $left_zone}
 			<br clear="all" />
@@ -101,5 +123,21 @@
 	<div class="line_clear">&nbsp;</div>
 	</div>
 </div>
+{literal}
+	<script>
+        jQuery(document).ready(function($) {
 
+            $('.section-item').on('click', function(e) {
+
+                if($(this).hasClass('expanded')) {
+                    $(this).removeClass('expanded');
+                }
+                else {
+                    $('.section-item').removeClass('expanded');
+                    $(this).addClass('expanded');
+                }
+            });
+        });
+	</script>
+{/literal}
 {*{debug}*}

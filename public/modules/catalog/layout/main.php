@@ -161,10 +161,14 @@ if ($act_item > 0) {
             $item_data->rudiscount = number_format(floatval($item_data->discount * $gallery->cur_factor), 1, '.', ' ');
         }
     }
-    $cat_nav = array();
-    $gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
 
-    $tpl->assign('catalog_menu', $cat_nav);
+//    $cat_nav = array();
+//    $gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
+//    $tpl->assign('catalog_menu', $cat_nav);
+
+    $grouped_cats = $gallery->groupedCategoies($page_info->proc_cat);
+    $tpl->assign('sections_navigation', $grouped_cats);
+
     $tpl->assign('item', $item_data);
     $page_html .= $tpl->fetch('catalog_item.tpl');
 }
@@ -199,10 +203,13 @@ elseif ($proc_cat >= 0) {
     $tpl->assign('page_show', $page_show);
     $tpl->assign('display_main_picture', $display_main_picture);
     $tpl->assign('pagination', $pagination);
-    $cat_nav = array();
-    $gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
 
-    $tpl->assign('catalog_menu', $cat_nav);
+//    $cat_nav = array();
+//    $gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
+//    $tpl->assign('catalog_menu', $cat_nav);
+
+    $grouped_cats = $gallery->groupedCategoies($page_info->proc_cat);
+    $tpl->assign('sections_navigation', $grouped_cats);
 
     $page_html .= $tpl->fetch('catalog_category.tpl');
 }

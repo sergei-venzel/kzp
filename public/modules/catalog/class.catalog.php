@@ -46,7 +46,7 @@ class catalog_data
                 'keys'   => array(
                     'PRIMARY KEY  (`id`)',
                 ),
-                'extra'  => 'ENGINE=MyISAM DEFAULT CHARSET=utf8',
+                'extra'  => 'ENGINE=innodb DEFAULT CHARSET=utf8',
             ),
             'items'   => array(
                 'fields' => array(
@@ -73,13 +73,14 @@ class catalog_data
                 'keys'   => array(
                     'PRIMARY KEY  (`id`)',
                 ),
-                'extra'  => 'ENGINE=MyISAM DEFAULT CHARSET=utf8',
+                'extra'  => 'ENGINE=innodb DEFAULT CHARSET=utf8',
             ),
         );
 
         return $t_data;
     }
 }
+
 class catalog
 {
     var     $name               = 'Каталог';
@@ -416,6 +417,173 @@ class catalog
         }
     }
 }
+
+class Sections
+{
+    /**
+     * @var \db|null $DB
+     */
+    protected $db      = null;
+
+    protected $tpl_dir = 'catalog/admin/views/';
+
+
+    public function __construct()
+    {
+        $this->db = Registry::getInstance()->get('db');
+    }
+
+
+    public function addSection($name, $sort_order = 0)
+    {
+        $sort_order = (int) trim(strip_tags($sort_order));
+        if (0 > $sort_order) {
+            $sort_order = 0;
+        }
+        $query = 'INSERT INTO `catalogSections` (`name`, `sort_order`) 
+        VALUES (\'' . $this->db->esc($name) . '\', \'' . $sort_order . '\')';
+        $this->db->dbQuery($query);
+    }
+
+
+    public function removeSection($id)
+    {
+        $this->db->dbQuery('DELETE FROM `catalogSections` WHERE `id`=\'' . (int) $id . '\'');
+    }
+
+
+    public function modifySection($id, array $data)
+    {
+        if (empty($data)) {
+            throw new Exception('Empty modify Data');
+        }
+
+        $query = 'UPDATE `catalogSections` SET ';
+
+        $set = array();
+        if (isset($data['name'])) {
+
+            $set[] = '`name` = \'' . $this->db->esc($data['name']) . '\' ';
+        }
+        if (isset($data['sort_order'])) {
+
+            $set[] = '`sort_order` = \'' . abs((int) $data['sort_order']) . '\'';
+        }
+
+        $query .= implode(', ', $set);
+
+        $query .= ' WHERE `id`=\'' . (int) $id . '\'';
+
+        $this->db->dbQuery($query);
+
+        $this->cleanSectionCats($id);
+
+        if ( ! empty($data['catIds'])) {
+
+            $this->addSectionCats((int) $id, $data['catIds']);
+        }
+    }
+
+
+    private function cleanSectionCats($sectionId)
+    {
+        $this->db->dbQuery('DELETE FROM `sectionItems` WHERE `sectionId` = \'' . (int) $sectionId . '\'');
+    }
+
+
+    public function addSectionCats($sectionId, array $catIds)
+    {
+        $set = array();
+        foreach ($catIds as $id) {
+
+            $set[] = '(' . $sectionId . ', ' . $id . ')';
+        }
+
+        $query = 'INSERT INTO `sectionItems` (`sectionId`, `categoryId`) 
+        VALUES ' . implode(', ', $set);
+        $query .= ' ON DUPLICATE KEY UPDATE `sectionId` = VALUES(`sectionId`), `categoryId` = VALUES(`categoryId`)';
+
+        $this->db->dbQuery($query);
+    }
+
+
+    private function sectionItems($sectionId)
+    {
+        $result = array();
+
+        $query = 'SELECT `si`.`categoryId`, `gal`.`p_name` 
+        FROM `sectionItems` `si` 
+        LEFT JOIN `gallery` `gal` ON `si`.`categoryId` = `gal`.`id` 
+        WHERE `si`.`sectionId` = \'' . $sectionId . '\' 
+        ORDER BY `gal`.`sort_order`';
+
+        $res = $this->db->dbQuery($query);
+        while ($row = $res->fetch_assoc()) {
+
+            $result[] = $row;
+        }
+        $res->free_result();
+
+        return $result;
+    }
+
+
+    private function sectionsList()
+    {
+        $query  = 'SELECT `id`, `name`, `sort_order` 
+        FROM `catalogSections` ORDER BY `sort_order` ASC';
+        $res    = $this->db->dbQuery($query);
+        $result = array();
+        while ($row = $res->fetch_assoc()) {
+
+            $row['id']         = (int) $row['id'];
+            $row['sort_order'] = (int) $row['sort_order'];
+            $row['categories'] = $this->sectionItems($row['id']);
+            $result[]          = $row;
+        }
+        $res->free_result();
+
+        return $result;
+    }
+
+
+    public function categories()
+    {
+        $result = array();
+
+        $query = 'SELECT `id`, `p_name` FROM `gallery` ORDER BY `sort_order`';
+
+        $res = $this->db->dbQuery($query);
+        while ($row = $res->fetch_assoc()) {
+
+            $result[] = $row;
+        }
+        $res->free_result();
+
+        return $result;
+    }
+
+
+    public function sectionsHtml()
+    {
+        $params = array(
+            'items' => $this->sectionsList(),
+        );
+
+        return template($this->tpl_dir . 'sections_list', $params);
+    }
+
+
+    public function categoriesHtml()
+    {
+        $params = array(
+            'items' => $this->categories(),
+        );
+
+        return template($this->tpl_dir . 'category_list', $params);
+    }
+}
+
 class gallery
 {
     var $photo_dir_pref  = 'files/catalog/gallery_';
@@ -500,7 +668,7 @@ class gallery
                 $val->discount = number_format(floatval($val->discount), 1, '.', ' ');
 
                 if ($this->cur_factor) {
-                    $val->ruprice          = number_format(floatval($val->price * $this->cur_factor), 1, '.', ' ');
+                    $val->ruprice    = number_format(floatval($val->price * $this->cur_factor), 1, '.', ' ');
                     $val->rudiscount = number_format(floatval($val->discount * $this->cur_factor), 1, '.', ' ');
                 }
 
@@ -603,7 +771,6 @@ class gallery
 
     function get_site_navigation(&$arr, $branch_id, $id = 0, $pid = 0, $page_info, $step = 0)
     {
-
         global $db;
 
         $res = $db->select_obj($this->tree_table, 'id,rid,pid,p_name', 'publish=1 and pid=\'' . $pid . '\' order by sort_order', 'file: ' . __FILE__ . 'line:' . __LINE__);
@@ -651,6 +818,108 @@ class gallery
                 $arr[] = $tmp;
             }
         }
+    }
+
+
+    public function groupedCategoies($flag = 0)
+    {
+        global $db;
+
+        $alones = $this->getAllItems($flag);
+        $used   = array();
+
+        $result = array();
+
+        $query = 'SELECT `id`, `name` FROM `catalogSections` ORDER BY `sort_order`';
+
+        $res = $db->dbQuery($query);
+        while ($row = $res->fetch_assoc()) {
+
+            $row['id'] = (int) $row['id'];
+            if ( ! $sectionCategs = $this->sectionCategories($row['id'])) {
+                continue;
+            }
+
+            $tmp      = array();
+            $expanded = false;
+
+            foreach ($sectionCategs as $catId) {
+
+                if (isset($alones[$catId])) {
+                    $tmp[] = $alones[$catId];
+                    if (false === $expanded && $alones[$catId]['current']) {
+                        $expanded = true;
+                    }
+                    if ( ! in_array($catId, $used)) {
+                        $used[] = $catId;
+                    }
+                }
+            }
+
+            if (empty($tmp)) {
+                continue;
+            }
+
+            $result[] = array(
+                'section'  => $row['name'],
+                'items'    => $tmp,
+                'expanded' => $expanded,
+            );
+        }
+        $res->free_result();
+
+        foreach ($used as $id) {
+            if (isset($alones[$id])) {
+                unset($alones[$id]);
+            }
+        }
+
+        return array(
+            'grouped' => $result,
+            'alone'   => $alones,
+        );
+    }
+
+
+    private function getAllItems($flag = 0)
+    {
+        global $db;
+
+        $result = array();
+
+        $query = 'SELECT `id`, `rid`, `pid`, `p_name` 
+        FROM `gallery` WHERE `publish`=1 AND `pid`=0 
+        ORDER BY `sort_order`';
+
+        $res = $db->dbQuery($query);
+        while ($row = $res->fetch_assoc()) {
+
+            $row['id']          = (int) $row['id'];
+            $row['link']        = 'set=' . $this->gallery_page_id . '&gallery=' . $row['id'];
+            $row['current']     = ($flag == $row['id']);
+            $result[$row['id']] = $row;
+        }
+        $res->free_result();
+
+        return $result;
+    }
+
+
+    private function sectionCategories($sectionId)
+    {
+        global $db;
+        $result = array();
+
+        $query = 'SELECT `categoryId` FROM `sectionItems` WHERE `sectionId` = \'' . $sectionId . '\'';
+
+        $res = $db->dbQuery($query);
+        while ($row = $res->fetch_assoc()) {
+
+            $result[] = (int) $row['categoryId'];
+        }
+        $res->free_result();
+
+        return $result;
     }
 
 
@@ -1328,7 +1597,6 @@ class gallery
     function get_new_items($count_items = false)
     {
 
-
         global $db;
 
         $page = $db->select_obj(ptbl, 'id', 'publish=1 and layout="catalog"');
@@ -1337,7 +1605,6 @@ class gallery
             $res_item = $db->select_obj($this->photo_table, 'id,cat_id,item_name,photo,short', 'new_item=\'1\' order by sort_order', 'file: ' . __FILE__ . 'line:' . __LINE__);
 
             if ($res_item) {
-
 
                 $arr = array();
 

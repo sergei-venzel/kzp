@@ -220,7 +220,7 @@ class db extends mysqli
             throw new Exception($descr . $err);
         }
         else {
-            error_log($descr . $err);
+            error_log($err . $descr);
         }
     }
 
@@ -731,12 +731,11 @@ class db extends mysqli
      */
     private function query_result($query, $method = '')
     {
-        try {
-            $res = $this->query($query);
-        }
-        catch(Exception $e) {
-            $this->err_report($this->error . "\r\n\r\n" . $e->getMessage(), 'In ' . $method . ': ' . "\r\n");
-            throw new Exception($method . ': ' . $this->error);
+        $res = $this->query($query);
+
+        if ($res === false) {
+            $this->err_report($this->error);
+            throw new MySqliException($this->error, $this->errno, $query);
         }
 
         return $res;
