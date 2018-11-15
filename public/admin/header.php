@@ -72,7 +72,7 @@ else $page_title=' :: '.$page_title;
     <script src="/js/ui.draggable.js"></script>
     <script src="/js/ui.dialog.js"></script>
     <script src="/js/colorpicker.js"></script>
-    <script language="JavaScript" src="/js/funcs.js?v=1.0.1"></script>
+    <script language="JavaScript" src="/js/funcs.js?v=1.0.2"></script>
     <?php
     if(isset($add_scripts) && !empty($add_scripts)) {
 

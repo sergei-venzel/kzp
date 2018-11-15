@@ -90,3 +90,9 @@
 .sect-item .fa-btn {
     margin-left:4px;
 }
+
+.paper .active,
+.paper .link:hover
+{
+    background-color:rgba(191, 229, 255, 0.4);
+}

@@ -81,9 +81,13 @@ foreach($items as $row) {
 
             var obj = $(this), prnt = obj.parents('.section-scope'), id = parseInt(prnt.attr('data-id'));
 
+            $('.paper', prnt).hide();
+
             if(!isNaN(id)) {
 
                 obj.attr('disabled', true);
+
+                obj.simpleWaiter({prnt:obj});
 
                 $.ajax(
                     {
@@ -100,7 +104,8 @@ foreach($items as $row) {
                         type:'post',
                         success:function(response) {
 
-                            obj.attr('disabled', false);
+                            obj.attr('disabled', false).css('color','');
+                            obj.trigger('stop');
                             if(response.error) {
                                 show_save_alert(response.error);
                             }
@@ -120,6 +125,8 @@ foreach($items as $row) {
             var sectCats = $('.section-categories', prnt);
 
             $('.paper').hide();
+
+            $('.link', paper).removeClass('active');
 
             if(!$('.cat-item', paper).length) {
 
@@ -141,7 +148,7 @@ foreach($items as $row) {
                                 for(el = 0; el < response.result.length; el++) {
 
                                     cat = response.result[el];
-                                    catNode = $('<p class="active link" data-cat-id="'+cat['id']+'"></p>');
+                                    catNode = $('<p class="link" data-cat-id="'+cat['id']+'"></p>');
                                     catNode.html(cat['p_name']);
                                     catNode.bind('click', function(e) {
 
@@ -151,17 +158,21 @@ foreach($items as $row) {
                                         }).get();
 
                                         if(catMap.indexOf(catId) < 0) {
+
+                                            $(this).addClass('active');
                                             sectNode = $('<span data-cat-id="'+ catId +'" class="sect-item"></span>');
                                             sectNode.html($(this).html()).dynamicSection(
                                                 {
                                                     onremove:function() {
                                                         this.remove();
                                                         prnt.trigger('store');
+                                                        $('button.action', prnt).css('color', '#f00');
                                                     }
                                                 }
                                             );
                                             sectCats.append(sectNode);
                                             prnt.trigger('store');
+                                            $('button.action', prnt).css('color', '#f00');
                                         }
                                     });
                                     paper.append(catNode);

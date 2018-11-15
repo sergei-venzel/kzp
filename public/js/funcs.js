@@ -584,3 +584,43 @@ function getType(o) { return Object.prototype.toString.call(o).toLowerCase().spl
     }
 
 })(jQuery);
+
+(function($) {
+    $.fn.simpleWaiter = function(opts) {
+
+        opts = opts || {};
+
+        opts = $.extend({
+            wrapper:false,
+            elem:'<img src="/admin/images/hprgs.gif" />',
+            prnt:false
+        }, opts);
+
+        return this.each(function(ind, elm) {
+
+            elm = $(elm);
+            var prnt = opts.prnt || elm.parent(), prntPos = prnt.css('position');
+            if('relative' !== prntPos || 'absolute' !== prntPos || 'fixed' !== prntPos) {
+                prnt.css('position', 'relative');
+            }
+
+            var welem = $(opts.elem), waitElem = opts.wrapper ? $(opts.wrapper).append(welem) : welem;
+
+            welem.css(
+                {
+                    'position':'absolute',
+                    'top':'0',
+                    'left':'0',
+                    'z-index':'12'
+                }
+            );
+
+            elm.bind('stop', function(e) {
+
+                waitElem.remove();
+            });
+
+            prnt.prepend(waitElem);
+        });
+    }
+})(jQuery);
