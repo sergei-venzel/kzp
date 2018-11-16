@@ -1,3 +1,20 @@
+@font-face {
+    font-family:'FontAwesome';
+    src:url('/css/awesome/fontawesome-webfont.eot?v=4.7.0');
+    src:url('/css/awesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('/css/awesome/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('/css/awesome/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('/css/awesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('/css/awesome/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+    font-weight:normal;
+    font-style:normal
+}
+
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 html, div, table, td, img, p, form, ul, li {
     padding: 0 0 0 0;
     margin: 0 0 0 0;
@@ -391,12 +408,12 @@ li.current ul a:visited
 
 .arrow li:first-child a
 {
-    color:#1D34A6;
+    /*color:#1D34A6;*/
 }
 
 .arrow li:nth-of-type(2) a
 {
-    color:#f00;
+    /*color:#f00;*/
 }
 
 
@@ -1295,9 +1312,30 @@ table.full {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    background-color:#ddd;
-    padding: 8px 8px 8px 27px;
-    margin-left: -14px;
+    background-color:rgba(221, 221, 221, 0.7);
+    border:1px solid #d6d6d6;
+    padding: 8px 8px 8px 14px;
+    margin: 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    position:relative;
+}
+
+#basket:before {
+    content: "\f07a";
+    display: inline-block;
+    font: normal normal normal 50px/1 FontAwesome;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: absolute;
+    right: 4px;
+    top: calc(50% - 25px);
+    z-index: 0;
+    color: #1d981133;
+    line-height: 50px;
+    transform: rotateY(180deg);
 }
 
 .news-sections {
@@ -1330,6 +1368,7 @@ table.full {
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
  }
+
 .section-item h3 {
     background-color: #09090a;
     color:#f3f3f3;
@@ -1339,6 +1378,8 @@ table.full {
     -moz-box-sizing: border-box;
     position: relative;
     cursor:pointer;
+    font-weight:normal;
+    font-size:18px;
 }
 
 .section-item.current h3 {
@@ -1357,14 +1398,20 @@ table.full {
     z-index: 2;
 }
 .section-item h3:after {
-    content: '+';
+    content: '\2304';
     display: block;
     color: #f3f3f3;
-    font-size: 20px;
     position: absolute;
-    top: 4px;
     right: 12px;
     z-index: 2;
+    top: 0;
+    font-size: 30px;
+    line-height: 26px;
+}
+
+.section-item.expanded h3:after {
+    content:'\2303';
+    top:13px;
 }
 
 .section-item .cat-menu {

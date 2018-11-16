@@ -146,8 +146,13 @@ include(PUBPATH . 'header.php');
 
 // CATALOG CONTENT
 
-if ($act_item > 0) {
+$section_menu_id = 0;
 
+if (isset($_GET['smi'])) {
+    $section_menu_id = (int) $_GET['smi'];
+}
+
+if ($act_item > 0) {
 
     $tpl->assign('thumbs', '/' . $gallery->photo_dir_pref . $proc_cat . $gallery->thumb_dir . '/');
     $tpl->assign('big', '/' . $gallery->photo_dir_pref . $proc_cat . '/');
@@ -166,14 +171,13 @@ if ($act_item > 0) {
 //    $gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
 //    $tpl->assign('catalog_menu', $cat_nav);
 
-    $grouped_cats = $gallery->groupedCategoies($page_info->proc_cat);
+    $grouped_cats = $gallery->groupedCategoies($page_info->proc_cat, $section_menu_id);
     $tpl->assign('sections_navigation', $grouped_cats);
 
     $tpl->assign('item', $item_data);
     $page_html .= $tpl->fetch('catalog_item.tpl');
 }
 elseif ($proc_cat >= 0) {
-
 
     if (isset($_GET['page'])) {
         $page_show = (int) $_GET['page'];
@@ -208,7 +212,7 @@ elseif ($proc_cat >= 0) {
 //    $gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
 //    $tpl->assign('catalog_menu', $cat_nav);
 
-    $grouped_cats = $gallery->groupedCategoies($page_info->proc_cat);
+    $grouped_cats = $gallery->groupedCategoies($page_info->proc_cat, $section_menu_id);
     $tpl->assign('sections_navigation', $grouped_cats);
 
     $page_html .= $tpl->fetch('catalog_category.tpl');

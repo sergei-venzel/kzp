@@ -821,7 +821,7 @@ class gallery
     }
 
 
-    public function groupedCategoies($flag = 0)
+    public function groupedCategoies($flag = 0, $selectedId = 0)
     {
         global $db;
 
@@ -860,8 +860,11 @@ class gallery
                 continue;
             }
 
+            $expanded = $expanded && (int) $selectedId === $row['id'];
+
             $result[] = array(
                 'section'  => $row['name'],
+                'id'       => $row['id'],
                 'items'    => $tmp,
                 'expanded' => $expanded,
             );
