@@ -1312,8 +1312,8 @@ table.full {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    background-color:rgba(221, 221, 221, 0.7);
-    border:1px solid #d6d6d6;
+    background-color:rgb(197, 221, 207);
+    border:1px solid rgb(172, 221, 200);
     padding: 8px 8px 8px 14px;
     margin: 2px;
     box-sizing: border-box;
@@ -1333,7 +1333,7 @@ table.full {
     right: 4px;
     top: calc(50% - 25px);
     z-index: 0;
-    color: #1d981133;
+    color:rgb(114, 195, 148);
     line-height: 50px;
     transform: rotateY(180deg);
 }
@@ -1398,20 +1398,19 @@ table.full {
     z-index: 2;
 }
 .section-item h3:after {
-    content: '\2304';
+    content: '+';
     display: block;
     color: #f3f3f3;
     position: absolute;
     right: 12px;
     z-index: 2;
-    top: 0;
+    top: 2px;
     font-size: 30px;
     line-height: 26px;
 }
 
 .section-item.expanded h3:after {
-    content:'\2303';
-    top:13px;
+    content:'\2013';
 }
 
 .section-item .cat-menu {
