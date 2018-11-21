@@ -23,6 +23,12 @@ catch(e) {
 			{*{html_list_top_menu data=$catalog_menu class='arrow cat-menu'}*}
 			{*{/if}*}
 
+	        <div id="basket">
+		        <h4>{if $basket_link}<a href="{$basket_link}" title="Перейти к оформлению">Ваша корзина:</a>{else}Ваша корзина:{/if}</h4>
+		        <p id="b_q">Выбрано товаров: <b>{$basket_items}</b></p>
+		        <p id="b_s">На сумму: <b>{$basket_sum}</b></p>
+	        </div>
+
 	        {include file='catalog_navigation.tpl'}
             
             {if $price_list}

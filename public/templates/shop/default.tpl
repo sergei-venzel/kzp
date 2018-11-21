@@ -5,7 +5,13 @@
        
     <div class="main">
         <div class="left_block noprint">
-        
+
+            <div id="basket">
+                <h4>{if $basket_link}<a href="{$basket_link}" title="Перейти к оформлению">Ваша корзина:</a>{else}Ваша корзина:{/if}</h4>
+                <p id="b_q">Выбрано товаров: <b>{$basket_items}</b></p>
+                <p id="b_s">На сумму: <b>{$basket_sum}</b></p>
+            </div>
+
             {if $sub_pages}
             {html_list data=$sub_pages class="arrow"}
             {/if}
