@@ -9,24 +9,26 @@
             {if $sub_pages}
             {html_list data=$sub_pages class="arrow"}
             {/if}
+
+            {include file='catalog_navigation.tpl'}
             
             {if $left_zone}
 			<br clear="all" />
 			<div class="u-left-zone">{$left_zone}</div>
 			{/if}
             
-            {if $price_list}
-            <h2>Прайс-лист</h2>
-                {foreach from=$price_list item=val}
-                <a href="{$val->im_src}" class="price">Скачать
-                    {if ($val->last_time_mod && $val->size)}({$val->last_time_mod}, {$val->size})
-                    {else}
-                        {if ($val->last_time_mod)}({$val->last_time_mod}){/if}
-                        {if ($val->size)}({$val->size}){/if}
-                    {/if}
-                </a>
-                {/foreach}
-            {/if}
+            {*{if $price_list}*}
+            {*<h2>Прайс-лист</h2>*}
+                {*{foreach from=$price_list item=val}*}
+                {*<a href="{$val->im_src}" class="price">Скачать*}
+                    {*{if ($val->last_time_mod && $val->size)}({$val->last_time_mod}, {$val->size})*}
+                    {*{else}*}
+                        {*{if ($val->last_time_mod)}({$val->last_time_mod}){/if}*}
+                        {*{if ($val->size)}({$val->size}){/if}*}
+                    {*{/if}*}
+                {*</a>*}
+                {*{/foreach}*}
+            {*{/if}*}
             
             
             {if $announce_news}

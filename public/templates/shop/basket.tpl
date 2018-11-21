@@ -19,9 +19,11 @@ catch(e) {
     <div class="main">
         <div class="left_block noprint">
         
-            {if $catalog_menu}
-			{html_list_top_menu data=$catalog_menu class='arrow cat-menu'}
-			{/if}
+            {*{if $catalog_menu}*}
+			{*{html_list_top_menu data=$catalog_menu class='arrow cat-menu'}*}
+			{*{/if}*}
+
+	        {include file='catalog_navigation.tpl'}
             
             {if $price_list}
             <h2>Прайс-лист</h2>

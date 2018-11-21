@@ -348,10 +348,23 @@ if ($result) {
 $tpl->assign('items', $items);
 $tpl->assign('thumbs', '/' . $gallery->photo_dir_pref . '%d' . $gallery->thumb_dir . '/');
 $tpl->assign('img', md5(uniqid(rand(), true)));
-$cat_nav = array();
-$gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
 
-$tpl->assign('catalog_menu', $cat_nav);
+
+$section_menu_id = 0;
+
+if (isset($_GET['smi'])) {
+    $section_menu_id = (int) $_GET['smi'];
+}
+
+$grouped_cats = $gallery->groupedCategoies($page_info->proc_cat, $section_menu_id);
+$tpl->assign('sections_navigation', $grouped_cats);
+
+//$cat_nav = array();
+//$gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
+//$tpl->assign('catalog_menu', $cat_nav);
+
+
+
 $tpl->assign('guidemess', nl2br($orders->get_answer()));
 
 if ($gallery->cur_factor > 0 && isset($_SESSION['basket']['total'])) {
