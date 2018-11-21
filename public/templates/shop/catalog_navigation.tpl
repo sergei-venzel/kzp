@@ -19,3 +19,20 @@
 		</ul>
 	{/if}
 {/if}
+{literal}
+	<script>
+        jQuery(document).ready(function($) {
+
+            $('.section-item').on('click', function(e) {
+
+                if($(this).hasClass('expanded')) {
+                    $(this).removeClass('expanded');
+                }
+                else {
+                    $('.section-item').removeClass('expanded');
+                    $(this).addClass('expanded');
+                }
+            });
+        });
+	</script>
+{/literal}

@@ -179,17 +179,6 @@
 //            direction: 'left' // one of up|down|left|right  default=left
 //            delay:    -2000
         });
-
-        $('.section-item').on('click', function(e) {
-
-            if($(this).hasClass('expanded')) {
-                $(this).removeClass('expanded');
-            }
-            else {
-                $('.section-item').removeClass('expanded');
-                $(this).addClass('expanded');
-            }
-        });
     });
 </script>
 {/literal}
