@@ -14,7 +14,7 @@
 	{if $sections_navigation.alone}
 		<ul class="arrow cat-menu">
 			{foreach from=$sections_navigation.alone item=sectionCategory}
-				<li class="{if $sectionCategory.current}current{/if}"><a href="/?{$sectionCategory.link}">{$sectionCategory.p_name}</a></li>
+				<li class="out-of-section {if $sectionCategory.current}current{/if}"><a href="/?{$sectionCategory.link}">{$sectionCategory.p_name}</a></li>
 			{/foreach}
 		</ul>
 	{/if}

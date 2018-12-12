@@ -444,7 +444,10 @@ li.current ul a:visited
     color: #fe2525;
 }
 
-li.current {
+li.current,
+.out-of-section.current,
+.arrow li.out-of-section.current
+{
     background-color:#fe2525;
 }
 
@@ -1368,6 +1371,17 @@ table.full {
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
  }
+
+.out-of-section,
+.arrow li.out-of-section
+{
+    background-color: #09090a;
+    color:#f3f3f3;
+}
+
+.out-of-section a {
+    color:#f3f3f3;
+}
 
 .section-item h3 {
     background-color: #09090a;
