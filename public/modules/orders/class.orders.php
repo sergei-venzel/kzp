@@ -66,7 +66,6 @@ class orders
 
     function __construct()
     {
-
         $tables = get_class_vars(__CLASS__ . '_data');
         if ( ! empty($tables)) {
 
@@ -371,6 +370,98 @@ class orders
         );
 
         return $result_array;
+    }
+}
+
+class Shippings
+{
+    /**
+     * @var \db|null $DB
+     */
+    protected      $db             = null;
+
+    protected      $tpl_dir        = 'orders/admin/views/';
+
+    private static $shipp_db_table = 'shipping';
+
+
+    public function __construct()
+    {
+        $this->db = Registry::getInstance()->get('db');
+    }
+
+
+    public function addShippingMethod(array $data)
+    {
+        $name = isset($data['name']) ? trim(strip_tags($data['name'])) : '';
+
+        if (empty($name)) {
+            throw new Exception('Укажите Способ доставки');
+        }
+
+        $cost = isset($data['cost']) ? (float) str_replace(',', '.', $data['cost']) : 0;
+
+        $description = isset($data['description']) ? trim(strip_tags($data['description'])) : '';
+
+        $query = 'INSERT INTO `' . self::$shipp_db_table . '` 
+        (`name`, `cost`, `description`) 
+        VALUES (\'' . $this->db->esc($name) . '\', \'' . $cost . '\', \'' . $this->db->esc($description) . '\' )';
+
+        $this->db->dbQuery($query);
+    }
+
+
+    public function shippingsList()
+    {
+        $query  = 'SELECT `id`, `name`, `cost`, `description` FROM `' . self::$shipp_db_table . '`';
+        $result = array();
+        $res    = $this->db->dbQuery($query);
+        while ($row = $res->fetch_assoc()) {
+            $result[] = $row;
+        }
+        $res->free_result();
+
+        return $result;
+    }
+
+
+    public function shippingItemsHtml()
+    {
+        $params = array(
+            'items' => $this->shippingsList(),
+        );
+
+        return template($this->tpl_dir . 'list', $params);
+    }
+
+
+    public function removeShipp($id)
+    {
+        $this->db->dbQuery('DELETE FROM `' . self::$shipp_db_table . '` WHERE `id`=\'' . (int) $id . '\'');
+    }
+
+
+    public function modifyShipp($data)
+    {
+        $id = (int) $data['id'];
+
+        $name = isset($data['name']) ? trim(strip_tags($data['name'])) : '';
+
+        if (empty($name)) {
+            throw new Exception('Укажите Способ доставки');
+        }
+
+        $cost = isset($data['cost']) ? (float) str_replace(',', '.', $data['cost']) : 0;
+
+        $description = isset($data['description']) ? trim(strip_tags($data['description'])) : '';
+
+        $query = 'UPDATE `' . self::$shipp_db_table . '` SET 
+        `name` = \'' . $this->db->esc($name) . '\', 
+        `cost` = \'' . $cost . '\', 
+        `description`= \'' . $this->db->esc($description) . '\' 
+        WHERE `id`=\'' . $id . '\'';
+
+        $this->db->dbQuery($query);
     }
 }
 
