@@ -4,16 +4,20 @@ error_reporting(E_ALL);
 require_once('class.modules.php');
 $module = new modules();
 
-/*require_once('lib/class.email.php');
-$mail = new email();*/
 
-require_once('orders/class.orders.php');
-$orders = new orders();
-
-//write_log(orders_e_mail,'dbg.txt');
 require_once('catalog/class.catalog.php');
 $gallery = new gallery();
 
+require_once('orders/class.orders.php');
+$orders      = new orders();
+$shipp_model = new Shippings();
+$shippItems  = $shipp_model->shippingsList($gallery->cur_factor);
+
+$shiping = array();
+
+foreach ($shippItems as $sh) {
+    $shiping[(int) $sh['id']] = $sh;
+}
 
 $page_html = '';
 $tpl->assign('head_line', $page_content->p_name);
@@ -21,7 +25,7 @@ $content_res = $db->get_extreme_value($page->table, 'content', 'id=\'' . $act_pa
 $tpl->assign('page_content', $content_res->content);
 
 $tpl->assign('short_page', true);
-//$tpl->assign('scripts',array('/js/jquery.form.js'));
+
 include(PUBPATH . 'header.php');
 
 
@@ -157,14 +161,9 @@ if (isset($_POST['order'])) {
         'address'      => 'Адрес',
         'postcode'     => 'Индекс',
         'shiping_type' => 'Доставка',
+        'shiping_cost' => 'Стоимость доставки',
         'billing_type' => 'Оплата',
         'comm'         => 'Примечания',
-    );
-
-    $shiping = array(
-        1 => 'Почта (1 класс)',
-        2 => 'ЕМС',
-        3 => 'Транспортная компания',
     );
 
     $billing = array(
@@ -200,15 +199,16 @@ if (isset($_POST['order'])) {
         $response->fields = 1;
     }
 
-    $data['shiping_type'] = (int) $data['shiping_type'];
-    $data['billing_type'] = (int) $data['billing_type'];
+    $shipType    = (int) $data['shiping_type'];
+    $billingType = (int) $data['billing_type'];
 
-    if ( ! isset($shiping[$data['shiping_type']]) || ! isset($billing[$data['billing_type']])) {
+    if ( ! isset($shiping[$shipType]) || ! isset($billing[$billingType])) {
         $response->fields = 1;
     }
 
-    $data['shiping_type'] = $shiping[$data['shiping_type']];
-    $data['billing_type'] = $billing[$data['billing_type']];
+    $data['shiping_type'] = $shiping[$shipType]['name'];
+    $data['shiping_cost'] = $shiping[$shipType]['cost'];
+    $data['billing_type'] = $billing[$billingType];
 
     $posted_name  = $data['fio'];
     $posted_umail = $data['umail'];
@@ -244,15 +244,20 @@ if (isset($_POST['order'])) {
                 $order_details[] = $val;
             }
 
-            $order_total = number_format(floatval($posted_items['basket_sum']), 1, '.', ' ');
+            $order_total = $posted_items['basket_sum'];
             if ($gallery->cur_factor > 0) {
-                $order_total = number_format(floatval($posted_items['basket_sum'] * $gallery->cur_factor), 1, '.', ' ');
+                $order_total = $posted_items['basket_sum'] * $gallery->cur_factor;
             }
+
+            $order_total += $data['shiping_cost'];
+
+            $order_total = number_format(floatval($order_total), 1, '.', ' ');
 
             $tpl->assign('list', array('customer' => $order_elem, 'order' => $order_details, 'total' => $order_total));
             $order_string = $tpl->fetch('order.tpl');
 
             $tpl->assign('staff4client', nl2br($orders->get_answer()));
+            $tpl->assign('shipping', $shiping[$shipType]);
             $client_order_string = $tpl->fetch('client_order.tpl');
 
             $order_stored = $orders->set_order(preg_replace('/<style[^>]*>(.*?)<\/style>/sim', '', $order_string));
@@ -359,17 +364,14 @@ if (isset($_GET['smi'])) {
 $grouped_cats = $gallery->groupedCategoies($page_info->proc_cat, $section_menu_id);
 $tpl->assign('sections_navigation', $grouped_cats);
 
-//$cat_nav = array();
-//$gallery->get_site_navigation($cat_nav, array(), 0, 0, $page_info);
-//$tpl->assign('catalog_menu', $cat_nav);
-
-
 
 $tpl->assign('guidemess', nl2br($orders->get_answer()));
 
 if ($gallery->cur_factor > 0 && isset($_SESSION['basket']['total'])) {
     $tpl->assign('ru_sum', number_format(floatval($_SESSION['basket']['total'] * $gallery->cur_factor), 1, '.', ' '));
 }
+
+$tpl->assign('shippItems', $shippItems);
 
 $page_html .= $tpl->fetch('basket.tpl');
 

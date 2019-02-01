@@ -43,6 +43,10 @@ table.order {
 </tr>
 {/foreach}
 </table>
+{if $shipping}
+<h3>Доставка</h3>
+<p>{$shipping.name}, стоимость: {$shipping.cost}</p>
+{/if}
 <p>Итого: <b>{$list.total}</b></p>
 </div>
 {/if}

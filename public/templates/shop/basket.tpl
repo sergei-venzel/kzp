@@ -128,13 +128,13 @@ catch(e) {
 				<input type="submit" id="recalc" name="recalc" value="" />
 				<p>Итого:
 				{if $ru_sum}
-					<span id="final_ru">{$basket_sum}</span>&nbsp;<small>RUR</small>
+					<span id="final_ru">{$basket_sum}</span><span id="add_ship"></span><small>RUR</small>
 					{else}
 					<span id="final">{$basket_sum}</span>&nbsp;<small>USD</small>
 				{/if}
 				</p>
 			</div>
-			
+
 			<div class="submit">
 
                 <label for="fio" style="clear: both;">Ф.И.О.</label>
@@ -166,11 +166,11 @@ catch(e) {
                 <label for="shiping_type" style="clear: both;">Способ доставки</label>
                 <select name="shiping_type" id="shiping_type" class="require" required>
                     <option></option>
-                    <option value="1">Почта (1 класс)</option>
-                    <option value="2">ЕМС</option>
-                    {*<option value="3">Транспортная компания</option>*}
+                    {foreach from=$shippItems item="deliver"}
+	                    <option data-price="{$deliver.cost}" value="{$deliver.id}">{$deliver.name}</option>
+                    {/foreach}
                 </select>
-
+				<input type="hidden" name="shiping_cost" value="0" />
                 <label for="billing_type" style="clear: both;">Способ оплаты</label>
                 <select name="billing_type" id="billing_type" class="require" required>
                     <option></option>

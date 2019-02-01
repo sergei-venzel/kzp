@@ -411,9 +411,9 @@ class Shippings
     }
 
 
-    public function shippingsList()
+    public function shippingsList($multiplier = 1)
     {
-        $query  = 'SELECT `id`, `name`, `cost`, `description` FROM `' . self::$shipp_db_table . '`';
+        $query  = 'SELECT `id`, `name`, (`cost` * '. (int) $multiplier .') AS `cost`, `description` FROM `' . self::$shipp_db_table . '`';
         $result = array();
         $res    = $this->db->dbQuery($query);
         while ($row = $res->fetch_assoc()) {
