@@ -20,7 +20,11 @@ else {
 require_once('catalog/class.catalog.php');
 $gallery = new gallery();
 
+session_id();
+session_start();
+
 if (isset($_GET['add_to_basket']) AND isset($_SESSION['basket']['is_active'])) {
+
     $response      = new stdClass();
     $response->err = '';
 
@@ -56,6 +60,8 @@ if (isset($_GET['add_to_basket']) AND isset($_SESSION['basket']['is_active'])) {
     echo json_encode($response);
     exit;
 }
+
+session_write_close();
 
 $gallery_page_name = '';
 

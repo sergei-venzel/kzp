@@ -1,5 +1,7 @@
 <?php defined('SYSPATH') OR die('No direct access alowed');
 
+session_write_close();
+
 require_once('news/class.news.php');
 
 $acting_module = new news_site();
@@ -52,6 +54,7 @@ $tpl->assign( 'head_line', $headline );
 $tpl->assign( 'scripts', array('/js/site/highslide.packed.js', '/js/site/jquery.cycle.all.js') );
 $tpl->assign( 'styles', array('news_visitor.css?v=1.0.1') );
 $module_styles = array('news_visitor.css');
+
 include(PUBPATH . 'header.php');
 
 $tpl->template_dir = 'modules/news/';

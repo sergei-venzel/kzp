@@ -32,11 +32,13 @@ include(PUBPATH . 'header.php');
 $catalog_link = '?set=' . $gallery->gallery_page_id;
 $tpl->assign('catalog_link', $catalog_link);
 
-
 if (isset($_GET['remove_from_basket']) AND $basket_active !== false) {
 
     $response      = '';
     $response->err = '';
+
+    session_id();
+    session_start();
 
     unset($_SESSION['basket']['order'][(int) $_GET['remove_from_basket']]);
 
@@ -71,6 +73,8 @@ if (isset($_GET['remove_from_basket']) AND $basket_active !== false) {
         $_SESSION['basket']['total'] *= $gallery->cur_factor;
     }
 
+    session_write_close();
+
     $response->items = count($result);
 
     echo json_encode($response);
@@ -94,6 +98,9 @@ if (isset($_POST['recalc'])) {
         $response->err = $e->getMessage();
     }
 
+    session_id();
+    session_start();
+
     $_SESSION['basket']['order'] = $recalc_result['basket_products'];
 
     if ($gallery->cur_factor) {
@@ -102,6 +109,9 @@ if (isset($_POST['recalc'])) {
     else {
         $_SESSION['basket']['total'] = $recalc_result['basket_sum'];
     }
+
+    session_write_close();
+
     $response->total = number_format(floatval($recalc_result['basket_sum']), 1, '.', ' ');
     if ($gallery->cur_factor) {
         $response->ru_total = number_format(floatval($recalc_result['basket_sum'] * $gallery->cur_factor), 1, '.', ' ');
@@ -123,7 +133,7 @@ if (isset($_POST['recalc'])) {
  */
 
 if (isset($_POST['order'])) {
-    //sleep(4);
+
     require_once('swift/swift_required.php');
     $orders->load_settings();
 
@@ -133,6 +143,9 @@ if (isset($_POST['order'])) {
     $response->mailed = '';
     $response->fields = '';
     $response->code   = '';
+
+    session_id();
+    session_start();
 
     if ($_POST['s_code'] !== $_SESSION['security_code']) {
         $response->code = 1;
@@ -263,6 +276,7 @@ if (isset($_POST['order'])) {
             $order_stored = $orders->set_order(preg_replace('/<style[^>]*>(.*?)<\/style>/sim', '', $order_string));
 
             if ($order_stored !== false) {
+
                 $_SESSION['basket']['order'] = array();
                 $_SESSION['basket']['total'] = 0;
             }
@@ -309,11 +323,15 @@ if (isset($_POST['order'])) {
         $mailer->send($message);
     }
 
+    session_write_close();
+
     if (is_ajax()) {
         exit;
     }
 }
 
+session_id();
+session_start();
 
 $items  = array();
 $result = $gallery->count_basket_items(isset($_SESSION['basket']['order']) ? $_SESSION['basket']['order'] : array());
@@ -350,6 +368,7 @@ if ($result) {
         $items[$val->id] = $val;
     }
 }
+
 $tpl->assign('items', $items);
 $tpl->assign('thumbs', '/' . $gallery->photo_dir_pref . '%d' . $gallery->thumb_dir . '/');
 $tpl->assign('img', md5(uniqid(rand(), true)));
@@ -370,6 +389,8 @@ $tpl->assign('guidemess', nl2br($orders->get_answer()));
 if ($gallery->cur_factor > 0 && isset($_SESSION['basket']['total'])) {
     $tpl->assign('ru_sum', number_format(floatval($_SESSION['basket']['total'] * $gallery->cur_factor), 1, '.', ' '));
 }
+
+session_write_close();
 
 $tpl->assign('shippItems', $shippItems);
 

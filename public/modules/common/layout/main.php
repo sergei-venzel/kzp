@@ -6,6 +6,8 @@ $tpl->assign('main_class','page');
 
 include(PUBPATH . 'header.php');
 
+session_write_close();
+
 $tpl->assign('head_line',$page_content->p_name);
 $content_res = $db->get_extreme_value($page->table,'content','id=\''.$act_page_id.'\'');
 $tpl->assign('page_content',$content_res->content);
