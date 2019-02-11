@@ -77,11 +77,12 @@ $width      = isset($_GET['width']) ? $_GET['width'] : '550';
 $height     = isset($_GET['height']) ? $_GET['height'] : '80';
 $characters = isset($_GET['characters']) && $_GET['characters'] > 1 ? $_GET['characters'] : '5';
 
+session_id();
+session_start();
+
 $code = '';
 $captcha = new CaptchaSecurityImages($width, $height, $characters, $code);
 
-session_id();
-session_start();
 $_SESSION['security_code'] = $code;
 session_write_close();
 ?>
