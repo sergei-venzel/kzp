@@ -57,7 +57,7 @@ $.getScript('/js/site/common.js');
             <a href="/" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине"><img src="{$theme_path}/images/logo.gif" alt="logo" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине" /></a>
         </div>
         <div class="boxed header-titles" style="max-width:100%;">
-            <div class="site-title boxed"><a href="/" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине">Kachay-Zhelezo.biz</a></div>
+            <div class="site-title boxed"><a href="/" title="Купить стероиды, анаболики, заказать анаболические стероиды в интернет-магазине">Kachay-Zhelezo.pro</a></div>
             <h2 class="site-title-2 boxed">ИНТЕРНЕТ-МАГАЗИН СТЕРОИДОВ</h2>
         </div>
         <div class="right_top_block">
