@@ -35,6 +35,7 @@
 
 
 <meta name="google-site-verification" content="h5BOqqOJapai5E3VNzah_ILzuZ7XXhA-OjzTmCXdNz8" />
+    <meta name="yandex-verification" content="06012bfb1fd41395" />
 <script type="text/javascript" language="JavaScript" src="/js/site/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" language="JavaScript" src="/js/site/jquery-ui.min.js"></script>
 <script type="text/javascript" language="JavaScript" src="/js/site/jquery.form.js"></script>
