@@ -112,13 +112,60 @@ include(PUBPATH . 'admin/header.php');
 echo SYSPATH;*/
 //echo $orders->answer_text_file;
 ?>
+    <script type="text/javascript" src="ui.datepicker-min.js"></script>
     <link rel="stylesheet" href="orders.css" type="text/css"/>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
     <h1>Раздел обработки Заказов</h1>
     <div style="margin-bottom:10px;" class="clearfix">
         <h4>Текст для письма клиенту</h4>
         <div id="err"></div>
         <textarea name="answer" id="answer"><?php echo $orders->get_answer(); ?></textarea><br/>
         <input type="button" value="Сохранить" id="save_answer"/>
+    </div>
+
+    <div class="clearfix" style="margin-top:10px;padding:8px;border:1px solid #A8AFA8;">
+        <h1>Промо коды</h1>
+        <form name="add-discount" method="post" action="" onsubmit="return false;">
+            <input type="text" name="token" placeholder="Промо код" />&nbsp;<span id="promo-gen" class="link" title="Сгенерировать промо-код">&hellip;</span>&nbsp;
+            <input type="text" name="discount" placeholder="Процент скидки" />
+            <input type="text" name="expired" placeholder="Действует до..." />
+            <button data-action="createMethod" id="add-discount-button">Добавить</button>
+        </form>
+
+        <div id="discount-list" class="clearfix" style="margin:8px 0 0 0;"></div>
+
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+
+                $('input[name="expired"]').datepicker(
+                    {
+                        buttonImageOnly:false,
+                        dateFormat: "dd-mm-yy"
+                    }
+                );
+
+                $.getScript('discount.js');
+
+                $.ajax(
+                    {
+                        url:'discounts.php',
+                        type:'get',
+                        cache:false,
+                        dataType:'json',
+                        data:{action:'items'},
+                        success:function(response) {
+
+                            if(response.error) {
+                                show_save_alert(response.error);
+                            }
+                            else {
+                                $('#discount-list').html(response.result);
+                            }
+                        }
+                    }
+                );
+            });
+        </script>
     </div>
 
     <div class="clearfix" style="margin-top:10px;padding:8px;border:1px solid #A8AFA8;">

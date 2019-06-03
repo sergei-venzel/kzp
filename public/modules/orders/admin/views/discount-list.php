@@ -1,4 +1,4 @@
-<div id="shippings-set">
+<div id="discounts-set">
 <?php
 /**
  * kz.loc
@@ -15,11 +15,11 @@ foreach($items as $row) {
         <div class="section-data">
             <input type="hidden" name="action" value="modifySection" />
             <input type="hidden" name="id" value="<?php echo $row['id'];?>" />
-            <input type="text" name="name" placeholder="Способ доставки" value="<?php echo htmlspecialchars($row['name']);?>" style="width:140px;" />
-            <input type="text" name="cost" placeholder="Стоимость" value="<?php echo (float) $row['cost'];?>" style="width:40px;" />
+            <input disabled readonly type="text" name="token" placeholder="Промо-код" value="<?php echo htmlspecialchars($row['token']);?>" style="width:140px;" />
+            <input type="text" name="discount" placeholder="Скидка" value="<?php echo (float) $row['discount'];?>" style="width:40px;" />
+            <input type="text" class="frm-date" name="expired" value="<?php echo $row['expired'];?>" placeholder="Действует до..." />
             <button class="action fa fa-lg fa-btn fa-save" title="Сохранить"></button>
-            <button class="delete fa fa-lg fa-btn fa-minus-circle attention" title="Удалить способ доставки"></button>
-            <textarea class="stable" name="description"><?php echo $row['description'];?></textarea>
+            <button class="delete fa fa-lg fa-btn fa-minus-circle attention" title="Удалить промо-код"></button>
         </div>
     </div>
     <?php
@@ -29,19 +29,28 @@ foreach($items as $row) {
 <script>
     jQuery(document).ready(function($) {
 
-        let SHPC = $('#shippings-set');
+        let DSCC = $('#discounts-set');
+        $('input.frm-date', DSCC).datepicker(
+            {
+                buttonImageOnly:false,
+                // buttonImage:'../images/calendar.png',
+                // showOn:'button',
+                dateFormat: "dd-mm-yy",
+                buttonText:'Set Date'
+            }
+        );
 
-        $('.delete', SHPC).bind('click', function(e) {
+        $('.delete', DSCC).bind('click', function(e) {
 
-            let obj = $(this), prnt = obj.parents('.section-scope'), id = parseInt(prnt.attr('data-id'));
+            var obj = $(this), prnt = obj.parents('.section-scope'), id = parseInt(prnt.attr('data-id'));
 
-            if(!isNaN(id) && confirm('Удалить доставку "'+ $('input[name="name"]', prnt).val() +'"')) {
+            if(!isNaN(id) && confirm('Удалить промо-код "'+ $('input[name="token"]', prnt).val() +'"')) {
 
                 obj.attr('disabled', true);
 
                 $.ajax(
                     {
-                        url:'shippings.php',
+                        url:'discounts.php',
                         data:{action:'removeSection',id:id},
                         cache:false,
                         dataType:'json',
@@ -52,7 +61,7 @@ foreach($items as $row) {
                                 show_save_alert(response.error);
                             }
                             else {
-                                $('#shipp-list').html(response.result);
+                                $('#discount-list').html(response.result);
                             }
                         }
                     }
@@ -60,9 +69,9 @@ foreach($items as $row) {
             }
         });
 
-        $('.action', SHPC).bind('click', function(e) {
+        $('.action', DSCC).bind('click', function(e) {
 
-            let obj = $(this), prnt = obj.parents('.section-scope');
+            var obj = $(this), prnt = obj.parents('.section-scope');
 
             obj.attr('disabled', true);
 
@@ -70,8 +79,8 @@ foreach($items as $row) {
 
             $.ajax(
                 {
-                    url:'shippings.php',
-                    data:$('input, textarea', prnt).serialize(),
+                    url:'discounts.php',
+                    data:$('input', prnt).serialize(),
                     cache:false,
                     dataType:'json',
                     type:'post',

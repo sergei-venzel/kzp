@@ -413,7 +413,7 @@ class Shippings
 
     public function shippingsList($multiplier = 1)
     {
-        $query  = 'SELECT `id`, `name`, (`cost` * '. (int) $multiplier .') AS `cost`, `description` FROM `' . self::$shipp_db_table . '`';
+        $query  = 'SELECT `id`, `name`, (`cost` * ' . (int) $multiplier . ') AS `cost`, `description` FROM `' . self::$shipp_db_table . '`';
         $result = array();
         $res    = $this->db->dbQuery($query);
         while ($row = $res->fetch_assoc()) {
@@ -459,6 +459,105 @@ class Shippings
         `name` = \'' . $this->db->esc($name) . '\', 
         `cost` = \'' . $cost . '\', 
         `description`= \'' . $this->db->esc($description) . '\' 
+        WHERE `id`=\'' . $id . '\'';
+
+        $this->db->dbQuery($query);
+    }
+}
+
+class Discounts
+{
+    /**
+     * @var \db|null $DB
+     */
+    protected      $db       = null;
+
+    protected      $tpl_dir  = 'orders/admin/views/';
+
+    private static $db_table = 'promo_codes';
+
+
+    public function __construct()
+    {
+        $this->db = Registry::getInstance()->get('db');
+    }
+
+
+    public function addItem(array $data)
+    {
+        $token = isset($data['token']) ? trim(strip_tags($data['token'])) : '';
+
+        if (empty($token)) {
+            throw new Exception('Укажите Промо код');
+        }
+
+        $discount = isset($data['discount']) ? (float) str_replace(',', '.', $data['discount']) : 0;
+
+        $expired = false;
+        if ( ! empty($data['expired'])) {
+            $expired = date('Ymd235959', strtotime($data['expired']));
+        }
+
+        if (empty($expired)) {
+            $expired = date('Ymd235959', strtotime('+ 1 month'));
+        }
+
+        $query = 'INSERT INTO `' . self::$db_table . '` 
+        (`token`, `discount`, `expired`) 
+        VALUES (\'' . $this->db->esc($token) . '\', ' . ($discount * 0.01) . ', \'' . $expired . '\' )';
+
+        $this->db->dbQuery($query);
+    }
+
+
+    public function itemsList()
+    {
+        $query  = 'SELECT `id`, `token`, (`discount` * 100) AS `discount`, DATE_FORMAT(`expired`,\'%d-%m-%Y\') AS `expired` FROM `' . self::$db_table . '`';
+        $result = array();
+        $res    = $this->db->dbQuery($query);
+        while ($row = $res->fetch_assoc()) {
+            $result[] = $row;
+        }
+        $res->free_result();
+
+        return $result;
+    }
+
+
+    public function itemsHtml()
+    {
+        $params = array(
+            'items' => $this->itemsList(),
+        );
+
+        return template($this->tpl_dir . 'discount-list', $params);
+    }
+
+
+    public function removeItem($id)
+    {
+        $this->db->dbQuery('DELETE FROM `' . self::$db_table . '` WHERE `id`=\'' . (int) $id . '\'');
+    }
+
+
+    public function modify($data)
+    {
+        $id = (int) $data['id'];
+
+        $discount = isset($data['discount']) ? (float) str_replace(',', '.', $data['discount']) : 0;
+
+        $expired = false;
+        if ( ! empty($data['expired'])) {
+            $expired = date('Ymd235959', strtotime($data['expired']));
+        }
+
+        if (empty($expired)) {
+            $expired = date('Ymd235959', strtotime('+ 1 month'));
+        }
+
+        $query = 'UPDATE `' . self::$db_table . '` SET 
+        `discount` = ' . ($discount * 0.01) . ', 
+        `expired`= \'' . $expired . '\' 
         WHERE `id`=\'' . $id . '\'';
 
         $this->db->dbQuery($query);
