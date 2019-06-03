@@ -29,7 +29,7 @@ function close_bal() {
 
 $('#elements span.remove').click(function() {
 	
-	var obj = $(this);
+	let obj = $(this), frm = obj.parents('form');
 	var id = parseInt(obj.attr('id').replace(/^product_/,''));
 	
 	if(id != NaN && id > 0) {
@@ -37,9 +37,14 @@ $('#elements span.remove').click(function() {
 		if(confirm('Удалить товар из корзины?')) {
 			
 			$('input#recalc').attr('disabled',true);
+
+			let promoElm = $('input[name="promo"]', frm);
+
+			let promo = promoElm.length ? promoElm.val() : '';
+
 			$.getJSON(
 				ajs,
-				{remove_from_basket:id},
+				{remove_from_basket:id, promo:promo},
 				function(json) {
 					
 					$('input#recalc').attr('disabled',false);

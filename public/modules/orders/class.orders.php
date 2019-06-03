@@ -483,6 +483,32 @@ class Discounts
     }
 
 
+    public function promoDiscount($promo_code)
+    {
+        $promo = trim(strip_tags($promo_code));
+        if ( ! empty($promo)) {
+
+            $query = 'SELECT `discount` FROM `' . self::$db_table . '` 
+        WHERE `token` = \'' . $this->db->esc($promo_code) . '\' 
+        AND `expired` > NOW() LIMIT 1';
+
+            try {
+                if ($row = $this->db->getSingleRow($query)) {
+
+                    return (float) $row['discount'];
+                }
+            }
+            catch(Exception $e) {
+
+                error_log($e->getMessage());
+                return 0;
+            }
+        }
+
+        return 0;
+    }
+
+
     public function addItem(array $data)
     {
         $token = isset($data['token']) ? trim(strip_tags($data['token'])) : '';

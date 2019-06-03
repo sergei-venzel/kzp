@@ -1106,11 +1106,27 @@ div.recalc {
 }
 
 .recalc input {
+    display:block;
+    float:right;
+    clear:right;
+    margin-bottom:8px;
+}
+
+.recalc input[type="submit"] {
 	background: #fff url(images/buttons.gif) no-repeat left top;
 	border:none;
 	cursor: pointer;
 	height:22px;
 	width:92px;
+}
+
+input.promo {
+    background-color: #fff;
+    border: 1px solid #475547;
+    display: block;
+    height: 20px;
+    font-size: 12px;
+    width: 92px;
 }
 
 .recalc p {

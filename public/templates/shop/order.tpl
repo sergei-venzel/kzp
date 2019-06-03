@@ -41,6 +41,9 @@ table.order {
 </tr>
 {/foreach}
 </table>
+{if $list.discount > 0}
+<p>Скидка по промо-коду: <b>{$list.discount}%</b></p>
+{/if}
 <p>Итого: <b>{$list.total}</b></p>
 </div>
 {/if}

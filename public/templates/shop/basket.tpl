@@ -125,8 +125,9 @@ catch(e) {
 			
 			
 			<div class="recalc">
+				<input type="text" name="promo" class="promo" placeholder="Промо код" />
 				<input type="submit" id="recalc" name="recalc" value="" />
-				<p>Итого:
+				<p class="clear">Итого:
 				{if $ru_sum}
 					<span id="final_ru">{$basket_sum}</span><span id="add_ship"></span><small>RUR</small>
 					{else}

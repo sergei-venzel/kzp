@@ -47,6 +47,9 @@ table.order {
 <h3>Доставка</h3>
 <p>{$shipping.name}, стоимость: {$shipping.cost}</p>
 {/if}
+{if $list.discount > 0}
+<p>Скидка по промо-коду: <b>{$list.discount}%</b></p>
+{/if}
 <p>Итого: <b>{$list.total}</b></p>
 </div>
 {/if}

@@ -1,4 +1,10 @@
-<?php defined('SYSPATH') or die('Out of');
+<?php
+
+/**
+ * @var \stdClass $page_content
+ * @var integer   $act_page_id
+ */
+defined('SYSPATH') or die('Out of');
 error_reporting(E_ALL);
 
 require_once('class.modules.php');
@@ -9,9 +15,10 @@ require_once('catalog/class.catalog.php');
 $gallery = new gallery();
 
 require_once('orders/class.orders.php');
-$orders      = new orders();
-$shipp_model = new Shippings();
-$shippItems  = $shipp_model->shippingsList($gallery->cur_factor);
+$orders         = new orders();
+$shipp_model    = new Shippings();
+$shippItems     = $shipp_model->shippingsList($gallery->cur_factor);
+$discount_model = new Discounts();
 
 $shiping = array();
 
@@ -64,11 +71,17 @@ if (isset($_GET['remove_from_basket']) AND $basket_active !== false) {
 
     $_SESSION['basket']['total'] = $basket_sum;
 
-    $response->total = number_format(floatval($basket_sum), 1, '.', ' ');
+    $promo_discount = 0;
+    if (isset($_GET['promo'])) {
+
+        $promo_discount = $discount_model->promoDiscount($_GET['promo']);
+    }
+
+    $response->total = number_format(floatval($basket_sum) * (1 - $promo_discount), 1, '.', ' ');
 
     if ($gallery->cur_factor) {
 
-        $response->ru_total = number_format(floatval($basket_sum * $gallery->cur_factor), 1, '.', ' ');
+        $response->ru_total = number_format(floatval($basket_sum * $gallery->cur_factor * (1 - $promo_discount)), 1, '.', ' ');
 
         $_SESSION['basket']['total'] *= $gallery->cur_factor;
     }
@@ -112,10 +125,17 @@ if (isset($_POST['recalc'])) {
 
     session_write_close();
 
-    $response->total = number_format(floatval($recalc_result['basket_sum']), 1, '.', ' ');
-    if ($gallery->cur_factor) {
-        $response->ru_total = number_format(floatval($recalc_result['basket_sum'] * $gallery->cur_factor), 1, '.', ' ');
+    $promo_discount = 0;
+    if (isset($_POST['promo'])) {
+
+        $promo_discount = $discount_model->promoDiscount($_POST['promo']);
     }
+
+    $response->total = number_format(floatval($recalc_result['basket_sum'] * (1 - $promo_discount)), 1, '.', ' ');
+    if ($gallery->cur_factor) {
+        $response->ru_total = number_format(floatval($recalc_result['basket_sum'] * $gallery->cur_factor * (1 - $promo_discount)), 1, '.', ' ');
+    }
+
     $response->items        = $recalc_result['items'];
     $response->recalc_items = $recalc_result['recalc_items'];
     $response->kill         = $recalc_result['remove_products'];
@@ -177,6 +197,7 @@ if (isset($_POST['order'])) {
         'shiping_cost' => 'Стоимость доставки',
         'billing_type' => 'Оплата',
         'comm'         => 'Примечания',
+        'promo'        => 'Промо код',
     );
 
     $billing = array(
@@ -223,6 +244,12 @@ if (isset($_POST['order'])) {
     $data['shiping_cost'] = $shiping[$shipType]['cost'];
     $data['billing_type'] = $billing[$billingType];
 
+    $promo_discount = 0;
+    if (isset($data['promo'])) {
+
+        $promo_discount = $discount_model->promoDiscount($data['promo']);
+    }
+
     $posted_name  = $data['fio'];
     $posted_umail = $data['umail'];
 
@@ -262,11 +289,13 @@ if (isset($_POST['order'])) {
                 $order_total = $posted_items['basket_sum'] * $gallery->cur_factor;
             }
 
+            $order_total = $order_total * (1 - $promo_discount);
+
             $order_total += $data['shiping_cost'];
 
             $order_total = number_format(floatval($order_total), 1, '.', ' ');
 
-            $tpl->assign('list', array('customer' => $order_elem, 'order' => $order_details, 'total' => $order_total));
+            $tpl->assign('list', array('customer' => $order_elem, 'order' => $order_details, 'total' => $order_total, 'discount' => ($promo_discount * 100)));
             $order_string = $tpl->fetch('order.tpl');
 
             $tpl->assign('staff4client', nl2br($orders->get_answer()));

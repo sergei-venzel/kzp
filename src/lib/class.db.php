@@ -49,6 +49,13 @@ class db extends mysqli
             throw new MySqliException(mysqli_connect_error(), mysqli_connect_errno(), 'Set charset');
         }
 
+        $offset = sprintf('%+d:%02d', HOURS_OFFSET, MINUTES_OFFSET);
+
+        $query = 'SET time_zone=\'' . $offset . '\'';
+        if ( ! $connection->query($query)) {
+            throw new MySqliException(mysqli_connect_error(), mysqli_connect_errno(), $query);
+        }
+
 //        $offset = sprintf('%+d:%02d', HOURS_OFFSET, MINUTES_OFFSET);
 //
 //        $query = 'SET time_zone=\''. $offset .'\'';
@@ -328,7 +335,7 @@ class db extends mysqli
 
 
     /**
-     * @param   string      $table
+     * @param string        $table
      * @param bool|stdClass $data
      * @param null          $ignore
      *
@@ -719,6 +726,26 @@ class db extends mysqli
     public function m_query($query, $method = '')
     {
         return $this->query_result($query, $method);
+    }
+
+
+    public function getSingleRow($sql)
+    {
+        /**
+         * @var MySQLi_Result
+         */
+        $res = $this->query($sql);
+        if ($res === false) {
+            throw new MySqliException($this->error, $this->errno, $sql);
+        }
+
+        $row = $res->fetch_assoc();
+        $res->free_result();
+        if (null === $row) {
+            return false;
+        }
+
+        return $row;
     }
 
 
