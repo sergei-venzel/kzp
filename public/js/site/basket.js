@@ -77,16 +77,16 @@ $('#elements span.remove').click(function() {
 
 $('input[name="recalc"]', '#basket_order').on('click', function(e) {
 
-    var $form = $(this).parents('form');
+    let $form = $(this).parents('form');
     $('.require', $form).prop('disabled', true);
 });
 
 $('input[name="promo"]', '#basket_order').on('blur', function(e) {
 
-	let promo = $(this).val();
-	if(promo) {
-		$('#recalc', $(this).parents('form')).trigger('click');
-	}
+	$('#recalc', $(this).parents('form')).trigger('click');
+	// let promo = $(this).val();
+	// if(promo) {
+	// }
 });
 
 $('#shiping_type').on('change', function(e) {
