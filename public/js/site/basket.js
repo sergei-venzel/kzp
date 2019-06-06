@@ -81,12 +81,20 @@ $('input[name="recalc"]', '#basket_order').on('click', function(e) {
     $('.require', $form).prop('disabled', true);
 });
 
+$('input[name="promo"]', '#basket_order').on('blur', function(e) {
+
+	let promo = $(this).val();
+	if(promo) {
+		$('#recalc', $(this).parents('form')).trigger('click');
+	}
+});
+
 $('#shiping_type').on('change', function(e) {
 
-	var obj = $(this),  shippCost = $(':selected', obj).data('price') || 0;
-	var $form = obj.parents('form');
-	var receip = $('#add_ship', $form);
-	var mainCost = parseFloat($('#final_ru').text().toString().replace(' ', ''));
+	let obj = $(this),  shippCost = $(':selected', obj).data('price') || 0;
+	let $form = obj.parents('form');
+	let receip = $('#add_ship', $form);
+	let mainCost = parseFloat($('#final_ru').text().toString().replace(' ', ''));
 	if(isNaN(mainCost)) {
 		mainCost = 0;
 	}

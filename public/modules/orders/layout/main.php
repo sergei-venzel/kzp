@@ -41,7 +41,7 @@ $tpl->assign('catalog_link', $catalog_link);
 
 if (isset($_GET['remove_from_basket']) AND $basket_active !== false) {
 
-    $response      = '';
+    $response      = new stdClass();
     $response->err = '';
 
     session_id();
@@ -89,6 +89,23 @@ if (isset($_GET['remove_from_basket']) AND $basket_active !== false) {
     session_write_close();
 
     $response->items = count($result);
+
+    echo json_encode($response);
+    exit;
+}
+
+if (isset($_GET['check_promo']) AND $basket_active !== false) {
+
+    $response      = new stdClass();
+    $response->err = '';
+
+    $promo_discount = 0;
+    if (isset($_GET['check_promo'])) {
+
+        $promo_discount = $discount_model->promoDiscount($_GET['check_promo']);
+    }
+
+    $response->discount = $promo_discount;
 
     echo json_encode($response);
     exit;
@@ -295,7 +312,12 @@ if (isset($_POST['order'])) {
 
             $order_total = number_format(floatval($order_total), 1, '.', ' ');
 
-            $tpl->assign('list', array('customer' => $order_elem, 'order' => $order_details, 'total' => $order_total, 'discount' => ($promo_discount * 100)));
+            $tpl->assign('list', array(
+                'customer' => $order_elem,
+                'order'    => $order_details,
+                'total'    => $order_total,
+                'discount' => ($promo_discount * 100),
+            ));
             $order_string = $tpl->fetch('order.tpl');
 
             $tpl->assign('staff4client', nl2br($orders->get_answer()));
